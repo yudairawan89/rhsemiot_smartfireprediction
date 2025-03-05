@@ -308,6 +308,7 @@ col1, col2 = st.columns([1, 3])  # Layout kolom untuk gambar logo dan teks
 with col1:
     st.image("kemdikbud.png", width=100)  # Menampilkan logo Kemdikbud
 with col2:
-    st.markdown("<h3 style='text-align: center;'>UHTP Smart Fire Prediction V1</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='text-align: center;'>Smart Fire Prediction RHSEM – IoT Model</h3>", unsafe_allow_html=True)
 
-st.markdown("<p style='text-align: center;'>Dikembangkan oleh Tim Dosen Universitas Hang Tuah Pekanbaru Tahun 2024</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center;'>Dikembangkan oleh Mahasiswa Universitas Putera Indonesia YPTK Padang Tahun 2025
+</p>", unsafe_allow_html=True)
