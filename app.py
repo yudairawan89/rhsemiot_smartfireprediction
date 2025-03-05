@@ -304,14 +304,18 @@ if model is not None and scaler is not None:
 
 # Footer dengan logo dan tulisan
 st.markdown("---")  # Garis pembatas untuk memisahkan footer
-col1, col2 = st.columns([1, 3])  # Layout kolom untuk gambar logo dan teks
-with col1:
-    st.image("kemdikbud.png", width=100)  # Menampilkan logo Kemdikbud
-with col2:
-    st.markdown("<h3 style='text-align: center;'>Smart Fire Prediction RHSEM – IoT Model</h3>", unsafe_allow_html=True)
 
-st.markdown("""
-    <p style='text-align: center;'>
-        Dikembangkan oleh Mahasiswa Universitas Putera Indonesia YPTK Padang Tahun 2025
-    </p>
-    """, unsafe_allow_html=True)
+# Layout dengan dua kolom: satu untuk logo, satu untuk teks
+col1, col2 = st.columns([1, 3], gap="medium")  
+
+with col1:
+    st.image("upi.png", width=100)  # Menampilkan logo Kemdikbud
+
+with col2:
+    st.markdown("""
+        <div style='display: flex; flex-direction: column; align-items: center; text-align: center;'>
+            <h3>Smart Fire Prediction RHSEM – IoT Model</h3>
+            <p>Dikembangkan oleh Mahasiswa Universitas Putera Indonesia YPTK Padang Tahun 2025</p>
+        </div>
+        """, unsafe_allow_html=True)
+
