@@ -310,5 +310,8 @@ with col1:
 with col2:
     st.markdown("<h3 style='text-align: center;'>Smart Fire Prediction RHSEM – IoT Model</h3>", unsafe_allow_html=True)
 
-st.markdown("<p style='text-align: center;'>Dikembangkan oleh Mahasiswa Universitas Putera Indonesia YPTK Padang Tahun 2025
-</p>", unsafe_allow_html=True)
+st.markdown("""
+    <p style='text-align: center;'>
+        Dikembangkan oleh Mahasiswa Universitas Putera Indonesia YPTK Padang Tahun 2025
+    </p>
+    """, unsafe_allow_html=True)
