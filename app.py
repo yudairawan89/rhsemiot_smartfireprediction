@@ -10,7 +10,7 @@ from streamlit_autorefresh import st_autorefresh
 # Load favicon image
 im = Image.open("favicon.ico")
 st.set_page_config(
-    page_title="UHTP Smart Fire Prediction",
+    page_title="RHSEM-IoT Smart Fire Prediction",
     page_icon=im,
 
 )
@@ -304,12 +304,10 @@ if model is not None and scaler is not None:
 
 # Footer dengan logo dan tulisan
 st.markdown("---")  # Garis pembatas untuk memisahkan footer
-col1, col2, col3 = st.columns([1, 3, 1])  # Layout kolom untuk gambar logo dan teks
+col1, col2 = st.columns([1, 3])  # Layout kolom untuk gambar logo dan teks
 with col1:
     st.image("kemdikbud.png", width=100)  # Menampilkan logo Kemdikbud
 with col2:
     st.markdown("<h3 style='text-align: center;'>UHTP Smart Fire Prediction V1</h3>", unsafe_allow_html=True)
-with col3:
-    st.image("uhtp.png", width=100)  # Menampilkan logo UHTP
 
 st.markdown("<p style='text-align: center;'>Dikembangkan oleh Tim Dosen Universitas Hang Tuah Pekanbaru Tahun 2024</p>", unsafe_allow_html=True)
