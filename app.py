@@ -309,7 +309,7 @@ st.markdown("---")  # Garis pembatas untuk memisahkan footer
 col1, col2 = st.columns([1, 3], gap="medium")  
 
 with col1:
-    st.image("upi.png", width=300)  # Menampilkan logo upi
+    st.image("upi.png", width=500)  # Menampilkan logo upi
 
 with col2:
     st.markdown("""
