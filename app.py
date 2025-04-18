@@ -107,11 +107,31 @@ if df is not None and not df.empty:
     ]
 
     # PREPROCESS DATA
-    last_data = df[fitur].astype(str).apply(lambda x: x.str.replace(',', '.')).astype(float).fillna(0)
-    scaled = scaler.transform(last_data)
-    df['Prediksi Kebakaran'] = [convert_to_label(p) for p in model.predict(scaled)]
+# Ambil baris terakhir dari data mentah
+raw_last_row = df.iloc[-1]
 
-    last_row = df.iloc[-1]
+# Inisialisasi dict bersih
+clean_dict = {}
+for col in fitur:
+    try:
+        val = str(raw_last_row[col]).replace(',', '.')
+        val = float(val)
+    except:
+        val = 0.0  # fallback jika error
+    clean_dict[col] = val
+
+# Buat dataframe untuk prediksi
+clean_input_df = pd.DataFrame([clean_dict])
+scaled = scaler.transform(clean_input_df)
+prediction_label = convert_to_label(model.predict(scaled)[0])
+
+# Simpan hasil ke df
+df.at[raw_last_row.name, 'Prediksi Kebakaran'] = prediction_label
+last_row = df.loc[raw_last_row.name]
+
+
+
+    
     waktu = pd.to_datetime(last_row['Waktu'])
     hari = convert_day_to_indonesian(waktu.strftime('%A'))
     bulan = convert_month_to_indonesian(waktu.strftime('%B'))
