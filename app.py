@@ -77,7 +77,7 @@ df = load_data()
 # === HEADER ===
 col1, col2 = st.columns([1, 9])
 with col1:
-    st.image("logo.png", width=90)
+    st.image("logo.png", width=190)
 with col2:
     st.markdown("<h2 style='margin-bottom:0;'>Smart Fire Prediction RHSEM – IoT Model</h2>", unsafe_allow_html=True)
     col_deskripsi, col_btn = st.columns([8, 2])
