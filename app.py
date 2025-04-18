@@ -1,4 +1,6 @@
 import streamlit as st
+st.set_page_config(page_title="Prediksi Kebakaran RHSEM-IoT", layout="centered")
+
 import pandas as pd
 import joblib
 import numpy as np
@@ -31,7 +33,6 @@ color_mapping = {
 }
 
 # ==== Judul Aplikasi ====
-st.set_page_config(page_title="Prediksi Kebakaran RHSEM-IoT", layout="centered")
 st.title("🔥 Prediksi Risiko Kebakaran - RHSEM IoT 🔥")
 st.markdown("Masukkan nilai sensor berikut untuk memprediksi tingkat risiko kebakaran.")
 
