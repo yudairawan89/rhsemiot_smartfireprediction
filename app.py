@@ -106,7 +106,7 @@ st.cache_data.clear()
 sensor_data = load_data(data_url)
 
 # Muat Model dan Scaler
-model = load_model('meta_LR.joblib')
+model = load_model('RHSEM_IoT_Model.joblib')
 scaler = load_scaler('scaler.joblib')
 
 # Tampilkan hasil prediksi data paling akhir sebelum data sensor
