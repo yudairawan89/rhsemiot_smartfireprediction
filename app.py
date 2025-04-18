@@ -88,7 +88,6 @@ with col2:
 st.markdown("<div class='section-title'>Hasil Prediksi Data Realtime</div>", unsafe_allow_html=True)
 
 if df is not None and not df.empty:
-    # PASTIKAN NAMA KOLOM SESUAI SAAT TRAINING
     df = df.rename(columns={
         'Suhu Udara': 'Tavg: Temperatur rata-rata (°C)',
         'Kelembapan Udara': 'RH_avg: Kelembapan rata-rata (%)',
@@ -106,108 +105,39 @@ if df is not None and not df.empty:
         'Kelembaban Permukaan Tanah'
     ]
 
-    # PREPROCESS DATA
-# Ambil baris terakhir dari data mentah
-raw_last_row = df.iloc[-1]
+    raw_last_row = df.iloc[-1]
+    clean_dict = {}
+    for col in fitur:
+        try:
+            val = str(raw_last_row[col]).replace(',', '.')
+            val = float(val)
+        except:
+            val = 0.0
+        clean_dict[col] = val
 
-# Inisialisasi dict bersih
-clean_dict = {}
-for col in fitur:
-    try:
-        val = str(raw_last_row[col]).replace(',', '.')
-        val = float(val)
-    except:
-        val = 0.0  # fallback jika error
-    clean_dict[col] = val
+    clean_input_df = pd.DataFrame([clean_dict])
+    scaled = scaler.transform(clean_input_df)
+    prediction_label = convert_to_label(model.predict(scaled)[0])
 
-# Buat dataframe untuk prediksi
-clean_input_df = pd.DataFrame([clean_dict])
-scaled = scaler.transform(clean_input_df)
-prediction_label = convert_to_label(model.predict(scaled)[0])
+    df.at[raw_last_row.name, 'Prediksi Kebakaran'] = prediction_label
+    last_row = df.loc[raw_last_row.name]
 
-# Simpan hasil ke df
-# Tambahkan hasil prediksi ke dataframe utama
-df.at[raw_last_row.name, 'Prediksi Kebakaran'] = prediction_label
-last_row = df.loc[raw_last_row.name]
+    waktu = pd.to_datetime(last_row['Waktu'])
+    hari = convert_day_to_indonesian(waktu.strftime('%A'))
+    bulan = convert_month_to_indonesian(waktu.strftime('%B'))
+    tanggal = waktu.strftime(f'%d {bulan} %Y')
+    font, bg = risk_styles.get(prediction_label, ("black", "white"))
 
-# Ambil waktu prediksi
-waktu = pd.to_datetime(last_row['Waktu'])
-hari = convert_day_to_indonesian(waktu.strftime('%A'))
-bulan = convert_month_to_indonesian(waktu.strftime('%B'))
-tanggal = waktu.strftime(f'%d {bulan} %Y')
-font, bg = risk_styles.get(prediction_label, ("black", "white"))
-
-
-    # === TAMPILKAN TABEL SENSOR TERBARU ===
     sensor_df = pd.DataFrame({
         "Variabel": fitur,
-        "Value": last_row[fitur].values
+        "Value": [f"{clean_dict[col]:.1f}" for col in fitur]
     })
     st.write("Data Sensor Realtime:")
     st.table(sensor_df)
 
-    # === TAMPILKAN PREDIKSI TERBARU ===
     st.markdown(
         f"<p style='background-color:{bg}; color:{font}; padding:10px; border-radius:8px; font-weight:bold;'>"
         f"Pada hari {hari}, tanggal {tanggal}, lahan ini diprediksi memiliki tingkat resiko kebakaran: "
-        f"<span style='text-decoration: underline; font-size: 22px;'>{risk_label}</span></p>",
+        f"<span style='text-decoration: underline; font-size: 22px;'>{prediction_label}</span></p>",
         unsafe_allow_html=True
     )
-
-# === TABEL TINGKAT RISIKO ===
-st.markdown("<div class='section-title'>Tabel Tingkat Resiko dan Intensitas Kebakaran</div>", unsafe_allow_html=True)
-st.markdown("""
-<table>
-<thead>
-<tr><th style='background-color:blue; color:white;'>Blue</th><th>Low</th><td>Tingkat resiko kebakaran rendah. Api mudah dikendalikan dan cenderung padam sendiri.</td></tr>
-<tr><th style='background-color:green; color:white;'>Green</th><th>Moderate</th><td>Tingkat resiko kebakaran sedang. Api relatif masih dapat dikendalikan.</td></tr>
-<tr><th style='background-color:yellow;'>Yellow</th><th>High</th><td>Tingkat resiko kebakaran tinggi. Api mulai sulit dikendalikan.</td></tr>
-<tr><th style='background-color:red; color:white;'>Red</th><th>Very High</th><td>Tingkat resiko sangat tinggi. Api sangat sulit dikendalikan.</td></tr>
-</thead>
-</table>
-""", unsafe_allow_html=True)
-
-# === TABEL DATA SENSOR LENGKAP ===
-st.markdown("<div class='section-title'>Data Sensor</div>", unsafe_allow_html=True)
-st.dataframe(df[['Waktu'] + fitur + ['Prediksi Kebakaran']].tail(10), use_container_width=True)
-
-csv = df.to_csv(index=False)
-st.download_button("📥 Download Hasil Prediksi Kebakaran sebagai CSV", data=csv, file_name='hasil_prediksi_kebakaran.csv', mime='text/csv')
-
-# === PREDIKSI MANUAL ===
-st.markdown("<div class='section-title'>Pengujian Menggunakan Data Manual</div>", unsafe_allow_html=True)
-col1, col2, col3 = st.columns(3)
-with col1:
-    suhu = st.number_input("Suhu Udara (°C)", value=30.0)
-    kelembapan = st.number_input("Kelembapan Udara (%)", value=65.0)
-with col2:
-    curah = st.number_input("Curah Hujan (mm)", value=10.0)
-    angin = st.number_input("Kecepatan Angin (m/s)", value=3.0)
-with col3:
-    tanah = st.number_input("Kelembaban Tanah (%)", value=50.0)
-
-if st.button("Prediksi Manual"):
-    input_df = pd.DataFrame([{
-        'Tavg: Temperatur rata-rata (°C)': suhu,
-        'RH_avg: Kelembapan rata-rata (%)': kelembapan,
-        'RR: Curah hujan (mm)': curah,
-        'ff_avg: Kecepatan angin rata-rata (m/s)': angin,
-        'Kelembaban Permukaan Tanah': tanah
-    }])
-    scaled_manual = scaler.transform(input_df)
-    manual_pred = convert_to_label(model.predict(scaled_manual)[0])
-    fnt, bgc = risk_styles.get(manual_pred, ("black", "white"))
-    st.markdown(
-        f"<p style='color:{fnt}; background-color:{bgc}; padding:10px; border-radius:5px;'>"
-        f"Prediksi Risiko Kebakaran: <b>{manual_pred}</b></p>",
-        unsafe_allow_html=True
-    )
-
-# === FOOTER ===
-st.markdown("<br><hr>", unsafe_allow_html=True)
-st.markdown("""
-<center>
-<h4>Smart Fire Prediction RHSEM – IoT Model</h4>
-<p>Dikembangkan oleh Mahasiswa Universitas Putera Indonesia YPTK Padang Tahun 2025</p>
-</center>
-""", unsafe_allow_html=True)
