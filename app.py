@@ -16,7 +16,6 @@ st_autorefresh(interval=3000, key="data_refresh")
 # === Gaya visual CSS ===
 st.markdown("""
 <style>
-.main {background-color: #F9F9F9;}
 .section-title {
     background-color: #1f77b4;
     color: white;
@@ -24,10 +23,6 @@ st.markdown("""
     border-radius: 6px;
     font-weight: bold;
 }
-table {width: 100%; border-collapse: collapse;}
-th, td {border: 1px solid #ddd; padding: 8px;}
-th {background-color: #e0e0e0; text-align: center;}
-td {text-align: center;}
 </style>
 """, unsafe_allow_html=True)
 
@@ -90,7 +85,7 @@ with col2:
     with c2:
         st.markdown(
             "<a href='https://docs.google.com/spreadsheets/d/1ZscUJ6SLPIF33t8ikVHUmR68b-y3Q9_r_p9d2rDRMCM/edit?gid=0#gid=0' target='_blank'>"
-            "<button style='padding: 6px 16px; background-color: #1f77b4; color: white; border: none; border-radius: 4px; cursor: pointer;'>Data Cloud</button>"
+            "<button style='padding: 6px 16px; background-color: #1f77b4; color: white; border: none; border-radius: 4px;'>Data Cloud</button>"
             "</a>",
             unsafe_allow_html=True
         )
@@ -135,14 +130,12 @@ if df is not None and not df.empty:
     label = last_row['Prediksi Kebakaran']
     font, bg = risk_styles.get(label, ("black", "white"))
 
-    # Tampilkan tabel sensor terakhir
     st.write("Data Sensor Realtime:")
     st.table(pd.DataFrame({
         "Variabel": fitur,
         "Value": [f"{last_row[f]:.1f}" for f in fitur]
     }))
 
-    # Tampilkan hasil prediksi terakhir
     st.markdown(
         f"<p style='background-color:{bg}; color:{font}; padding:10px; border-radius:8px; font-weight:bold;'>"
         f"Pada hari {hari}, tanggal {tanggal}, lahan ini diprediksi memiliki tingkat resiko kebakaran: "
@@ -156,16 +149,16 @@ st.markdown("""
 <table>
 <thead>
 <tr><th style='background-color:blue; color:white;'>Blue</th><th>Low</th><td>Resiko rendah, api mudah dikendalikan dan padam sendiri.</td></tr>
-<tr><th style='background-color:green; color:white;'>Green</th><th>Moderate</th><td>Resiko sedang, api relatif dapat dikendalikan.</td></tr>
+<tr><th style='background-color:green; color:white;'>Green</th><th>Moderate</th><td>Resiko sedang, api relatif masih dapat dikendalikan.</td></tr>
 <tr><th style='background-color:yellow;'>Yellow</th><th>High</th><td>Resiko tinggi, api mulai sulit dikendalikan.</td></tr>
 <tr><th style='background-color:red; color:white;'>Red</th><th>Very High</th><td>Resiko sangat tinggi, api sangat sulit dikendalikan.</td></tr>
 </thead>
 </table>
 """, unsafe_allow_html=True)
 
-# === Tabel Data Sensor Lengkap ===
+# === Tabel Data Sensor Lengkap dengan Scroll ===
 st.markdown("<div class='section-title'>Data Sensor Lengkap</div>", unsafe_allow_html=True)
-st.dataframe(df[['Waktu'] + fitur + ['Prediksi Kebakaran']].tail(10), use_container_width=True)
+st.dataframe(df[['Waktu'] + fitur + ['Prediksi Kebakaran']], height=400, use_container_width=True)
 
 # === Export ke XLSX ===
 output = BytesIO()
