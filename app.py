@@ -260,7 +260,7 @@ st.markdown("<br><hr>", unsafe_allow_html=True)
 col_logo1, col_text, col_logo2 = st.columns([2, 6, 2])
 
 with col_logo1:
-    st.image("logo.png", width=120)  # ukuran diperbesar
+    st.image("logo.png", width=140)  # ukuran diperbesar
 
 with col_text:
     st.markdown("""
