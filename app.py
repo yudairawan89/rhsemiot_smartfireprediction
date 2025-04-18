@@ -91,7 +91,77 @@ with col2:
 st.markdown("<div class='section-title'>Hasil Prediksi Data Realtime</div>", unsafe_allow_html=True)
 
 if df is not None and not df.empty:
-    ...  # Existing realtime prediction logic
+    df = df.rename(columns={
+        'Suhu Udara': 'Tavg: Temperatur rata-rata (°C)',
+        'Kelembapan Udara': 'RH_avg: Kelembapan rata-rata (%)',
+        'Curah Hujan/Jam': 'RR: Curah hujan (mm)',
+        'Kecepatan Angin (ms)': 'ff_avg: Kecepatan angin rata-rata (m/s)',
+        'Kelembapan Tanah': 'Kelembaban Permukaan Tanah',
+        'Waktu': 'Waktu'
+    })
+
+    fitur = [
+        'Tavg: Temperatur rata-rata (°C)',
+        'RH_avg: Kelembapan rata-rata (%)',
+        'RR: Curah hujan (mm)',
+        'ff_avg: Kecepatan angin rata-rata (m/s)',
+        'Kelembaban Permukaan Tanah'
+    ]
+
+    raw_last_row = df.iloc[-1]
+    clean_dict = {}
+    for col in fitur:
+        try:
+            val = str(raw_last_row[col]).replace(',', '.')
+            val = float(val)
+        except:
+            val = 0.0
+        clean_dict[col] = val
+
+    clean_input_df = pd.DataFrame([clean_dict])
+    scaled = scaler.transform(clean_input_df)
+    prediction_label = convert_to_label(model.predict(scaled)[0])
+
+    df.at[raw_last_row.name, 'Prediksi Kebakaran'] = prediction_label
+    last_row = df.loc[raw_last_row.name]
+
+    waktu = pd.to_datetime(last_row['Waktu'])
+    hari = convert_day_to_indonesian(waktu.strftime('%A'))
+    bulan = convert_month_to_indonesian(waktu.strftime('%B'))
+    tanggal = waktu.strftime(f'%d {bulan} %Y')
+    font, bg = risk_styles.get(prediction_label, ("black", "white"))
+
+    sensor_df = pd.DataFrame({
+        "Variabel": fitur,
+        "Value": [f"{clean_dict[col]:.1f}" for col in fitur]
+    })
+    st.write("Data Sensor Realtime:")
+    st.table(sensor_df)
+
+    st.markdown(
+        f"<p style='background-color:{bg}; color:{font}; padding:10px; border-radius:8px; font-weight:bold;'>"
+        f"Pada hari {hari}, tanggal {tanggal}, lahan ini diprediksi memiliki tingkat resiko kebakaran: "
+        f"<span style='text-decoration: underline; font-size: 22px;'>{prediction_label}</span></p>",
+        unsafe_allow_html=True
+    )
+
+    st.markdown("<div class='section-title'>Tabel Tingkat Resiko dan Intensitas Kebakaran</div>", unsafe_allow_html=True)
+    st.markdown("""
+    <table>
+        <thead>
+            <tr><th style='background-color:blue; color:white;'>Blue</th><th>Low</th><td>Tingkat resiko kebakaran rendah. Api mudah dikendalikan dan cenderung padam sendiri.</td></tr>
+            <tr><th style='background-color:green; color:white;'>Green</th><th>Moderate</th><td>Tingkat resiko kebakaran sedang. Api relatif masih dapat dikendalikan.</td></tr>
+            <tr><th style='background-color:yellow;'>Yellow</th><th>High</th><td>Tingkat resiko kebakaran tinggi. Api mulai sulit dikendalikan.</td></tr>
+            <tr><th style='background-color:red; color:white;'>Red</th><th>Very High</th><td>Tingkat resiko sangat tinggi. Api sangat sulit dikendalikan.</td></tr>
+        </thead>
+    </table>
+    """, unsafe_allow_html=True)
+
+    st.markdown("<div class='section-title'>Data Sensor Lengkap</div>", unsafe_allow_html=True)
+    st.dataframe(df[['Waktu'] + fitur + ['Prediksi Kebakaran']].tail(10), use_container_width=True)
+
+    csv = df.to_csv(index=False)
+    st.download_button("\U0001F4E5 Download Hasil Prediksi Kebakaran sebagai CSV", data=csv, file_name='hasil_prediksi_kebakaran.csv', mime='text/csv')
 
     # === PREDIKSI MANUAL ===
     st.markdown("<div class='section-title'>Pengujian Menggunakan Data Manual</div>", unsafe_allow_html=True)
