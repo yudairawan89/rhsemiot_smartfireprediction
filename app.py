@@ -271,7 +271,7 @@ with col_text:
     """, unsafe_allow_html=True)
 
 with col_logo2:
-    st.image("upi.png", width=170)  # logo kanan (UPI) diperbesar
+    st.image("upi.png", width=190)  # logo kanan (UPI) diperbesar
 
 
 
