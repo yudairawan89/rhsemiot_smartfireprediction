@@ -184,7 +184,7 @@ if df is not None and not df.empty:
 # === PREDIKSI MANUAL ===
 st.markdown("<div class='section-title'>Pengujian Menggunakan Data Manual</div>", unsafe_allow_html=True)
 
-# Inisialisasi default
+# Default inisialisasi input manual
 if "manual_input" not in st.session_state:
     st.session_state.manual_input = {
         "suhu": 30.0,
@@ -196,10 +196,10 @@ if "manual_input" not in st.session_state:
 if "manual_result" not in st.session_state:
     st.session_state.manual_result = None
 
-# Input manual dari state
+# Input fields
 col1, col2, col3 = st.columns(3)
 with col1:
-    suhu = st.number_input("Suhu Udara (°C)", value=st.session_state.manual_input["suhu"], key="suhu_input")
+    suhu = st.number_input("Suhu Udara (°C)", value=st.session_state.manual_input["suhu"], key="suhu_input", label_visibility="visible")
     kelembapan = st.number_input("Kelembapan Udara (%)", value=st.session_state.manual_input["kelembapan"], key="kelembapan_input")
 with col2:
     curah = st.number_input("Curah Hujan (mm)", value=st.session_state.manual_input["curah"], key="curah_input")
@@ -208,8 +208,8 @@ with col3:
     tanah = st.number_input("Kelembaban Tanah (%)", value=st.session_state.manual_input["tanah"], key="tanah_input")
 
 # Tombol aksi berdempetan
-btn_pred, btn_reset, _ = st.columns([1, 1, 8])
-with btn_pred:
+col_pred, col_reset, _ = st.columns([1, 1, 8])
+with col_pred:
     if st.button("🔍 Prediksi Manual"):
         input_df = pd.DataFrame([{
             'Tavg: Temperatur rata-rata (°C)': suhu,
@@ -228,7 +228,7 @@ with btn_pred:
             "tanah": tanah
         })
 
-with btn_reset:
+with col_reset:
     if st.button("🧼 Reset Manual"):
         st.session_state.manual_input = {
             "suhu": 0.0,
@@ -238,10 +238,10 @@ with btn_reset:
             "tanah": 0.0
         }
         st.session_state.manual_result = None
-        # Jalankan ulang aplikasi untuk refresh dan pindahkan kursor
-        st.experimental_rerun()
+        # Rerun otomatis agar inputan langsung refresh ke suhu dan bisa langsung diketik
+        st.rerun()
 
-# Menampilkan hasil prediksi manual
+# Tampilkan hasil prediksi
 if st.session_state.manual_result:
     hasil = st.session_state.manual_result
     font, bg = risk_styles.get(hasil, ("black", "white"))
@@ -250,7 +250,6 @@ if st.session_state.manual_result:
         f"Prediksi Risiko Kebakaran: <b>{hasil}</b></p>",
         unsafe_allow_html=True
     )
-
 
 
 
