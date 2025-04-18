@@ -91,6 +91,10 @@ with col2:
             unsafe_allow_html=True
         )
 
+# Tambahkan garis horizontal di bawah header
+st.markdown("<hr style='margin-top: 10px; margin-bottom: 25px;'>", unsafe_allow_html=True)
+
+
 # === PREDIKSI REALTIME ===
 st.markdown("<div class='section-title'>Hasil Prediksi Data Realtime</div>", unsafe_allow_html=True)
 
