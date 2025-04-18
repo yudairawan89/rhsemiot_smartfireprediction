@@ -1,4 +1,4 @@
-# === Smart Fire Prediction RHSEM - IoT Model ===
+# === Smart Fire Prediction RHSEM – IoT ===
 
 import streamlit as st
 import pandas as pd
@@ -7,41 +7,45 @@ from streamlit_autorefresh import st_autorefresh
 from datetime import datetime
 from io import BytesIO
 
-# === Pengaturan Halaman ===
+# === Konfigurasi halaman ===
 st.set_page_config(page_title="Smart Fire Prediction RHSEM – IoT", layout="wide")
 
-# === Auto Refresh Data ===
+# === Auto refresh setiap 3 detik ===
 st_autorefresh(interval=3000, key="data_refresh")
 
-# === Style Custom ===
+# === Gaya visual CSS ===
 st.markdown("""
 <style>
-    .main {background-color: #F9F9F9;}
-    .section-title {
-        background-color: #1f77b4;
-        color: white;
-        padding: 10px;
-        border-radius: 6px;
-        font-weight: bold;
-    }
-    table {width: 100%; border-collapse: collapse;}
-    th, td {border: 1px solid #ddd; padding: 8px;}
-    th {background-color: #e0e0e0; text-align: center;}
-    td {text-align: center;}
+.main {background-color: #F9F9F9;}
+.section-title {
+    background-color: #1f77b4;
+    color: white;
+    padding: 10px;
+    border-radius: 6px;
+    font-weight: bold;
+}
+table {width: 100%; border-collapse: collapse;}
+th, td {border: 1px solid #ddd; padding: 8px;}
+th {background-color: #e0e0e0; text-align: center;}
+td {text-align: center;}
 </style>
 """, unsafe_allow_html=True)
 
-# === Fungsi Utilitas ===
+# === Fungsi utilitas ===
 def convert_day_to_indonesian(day_name):
-    return {'Monday': 'Senin', 'Tuesday': 'Selasa', 'Wednesday': 'Rabu',
-            'Thursday': 'Kamis', 'Friday': 'Jumat', 'Saturday': 'Sabtu',
-            'Sunday': 'Minggu'}.get(day_name, day_name)
+    return {
+        'Monday': 'Senin', 'Tuesday': 'Selasa', 'Wednesday': 'Rabu',
+        'Thursday': 'Kamis', 'Friday': 'Jumat', 'Saturday': 'Sabtu',
+        'Sunday': 'Minggu'
+    }.get(day_name, day_name)
 
 def convert_month_to_indonesian(month_name):
-    return {'January': 'Januari', 'February': 'Februari', 'March': 'Maret',
-            'April': 'April', 'May': 'Mei', 'June': 'Juni', 'July': 'Juli',
-            'August': 'Agustus', 'September': 'September', 'October': 'Oktober',
-            'November': 'November', 'December': 'Desember'}.get(month_name, month_name)
+    return {
+        'January': 'Januari', 'February': 'Februari', 'March': 'Maret',
+        'April': 'April', 'May': 'Mei', 'June': 'Juni', 'July': 'Juli',
+        'August': 'Agustus', 'September': 'September', 'October': 'Oktober',
+        'November': 'November', 'December': 'Desember'
+    }.get(month_name, month_name)
 
 def convert_to_label(pred):
     return {0: "Low", 1: "Moderate", 2: "High", 3: "Very High"}.get(pred, "Unknown")
@@ -53,7 +57,7 @@ risk_styles = {
     "Very High": ("white", "red")
 }
 
-# === Load Model dan Scaler ===
+# === Load model dan scaler ===
 @st.cache_resource
 def load_model():
     return joblib.load("RHSEM_IoT_Model.joblib")
@@ -65,7 +69,7 @@ def load_scaler():
 model = load_model()
 scaler = load_scaler()
 
-# === Load Data Sensor dari Google Sheets ===
+# === Load data realtime ===
 @st.cache_data
 def load_data():
     url = "https://docs.google.com/spreadsheets/d/1ZscUJ6SLPIF33t8ikVHUmR68b-y3Q9_r_p9d2rDRMCM/export?format=csv"
@@ -74,7 +78,7 @@ def load_data():
 st.cache_data.clear()
 df = load_data()
 
-# === Header dan Deskripsi Aplikasi ===
+# === Header Aplikasi ===
 col1, col2 = st.columns([1, 9])
 with col1:
     st.image("logo.png", width=90)
@@ -91,7 +95,7 @@ with col2:
             unsafe_allow_html=True
         )
 
-# === Prediksi Realtime ===
+# === Prediksi Real-Time untuk Semua Baris ===
 st.markdown("<div class='section-title'>Hasil Prediksi Data Realtime</div>", unsafe_allow_html=True)
 
 if df is not None and not df.empty:
@@ -112,31 +116,33 @@ if df is not None and not df.empty:
         'Kelembaban Permukaan Tanah'
     ]
 
-    last_row_raw = df.iloc[-1]
-    clean_input = {}
+    # Preprocessing untuk seluruh baris
+    X_clean = df[fitur].copy()
     for f in fitur:
-        try:
-            clean_input[f] = float(str(last_row_raw[f]).replace(',', '.'))
-        except:
-            clean_input[f] = 0.0
+        X_clean[f] = X_clean[f].astype(str).str.replace(',', '.').astype(float)
+    X_clean = X_clean.fillna(0)
 
-    X_last = pd.DataFrame([clean_input])
-    scaled = scaler.transform(X_last)
-    label = convert_to_label(model.predict(scaled)[0])
-    df.at[last_row_raw.name, 'Prediksi Kebakaran'] = label
+    # Prediksi semua baris
+    X_scaled = scaler.transform(X_clean)
+    df['Prediksi Kebakaran'] = [convert_to_label(l) for l in model.predict(X_scaled)]
 
-    waktu = pd.to_datetime(last_row_raw['Waktu'])
+    # Ambil baris terakhir untuk ditampilkan
+    last_row = df.iloc[-1]
+    waktu = pd.to_datetime(last_row['Waktu'])
     hari = convert_day_to_indonesian(waktu.strftime('%A'))
     bulan = convert_month_to_indonesian(waktu.strftime('%B'))
     tanggal = waktu.strftime(f'%d {bulan} %Y')
+    label = last_row['Prediksi Kebakaran']
     font, bg = risk_styles.get(label, ("black", "white"))
 
+    # Tampilkan tabel sensor terakhir
     st.write("Data Sensor Realtime:")
     st.table(pd.DataFrame({
         "Variabel": fitur,
-        "Value": [f"{clean_input[f]:.1f}" for f in fitur]
+        "Value": [f"{last_row[f]:.1f}" for f in fitur]
     }))
 
+    # Tampilkan hasil prediksi terakhir
     st.markdown(
         f"<p style='background-color:{bg}; color:{font}; padding:10px; border-radius:8px; font-weight:bold;'>"
         f"Pada hari {hari}, tanggal {tanggal}, lahan ini diprediksi memiliki tingkat resiko kebakaran: "
@@ -144,15 +150,15 @@ if df is not None and not df.empty:
         unsafe_allow_html=True
     )
 
-# === Tabel Risiko ===
+# === Tabel Risiko dan Keterangan ===
 st.markdown("<div class='section-title'>Tabel Tingkat Resiko dan Intensitas Kebakaran</div>", unsafe_allow_html=True)
 st.markdown("""
 <table>
 <thead>
 <tr><th style='background-color:blue; color:white;'>Blue</th><th>Low</th><td>Resiko rendah, api mudah dikendalikan dan padam sendiri.</td></tr>
-<tr><th style='background-color:green; color:white;'>Green</th><th>Moderate</th><td>Resiko sedang, api cukup mudah dikendalikan.</td></tr>
+<tr><th style='background-color:green; color:white;'>Green</th><th>Moderate</th><td>Resiko sedang, api relatif dapat dikendalikan.</td></tr>
 <tr><th style='background-color:yellow;'>Yellow</th><th>High</th><td>Resiko tinggi, api mulai sulit dikendalikan.</td></tr>
-<tr><th style='background-color:red; color:white;'>Red</th><th>Very High</th><td>Resiko sangat tinggi, api sulit dikendalikan.</td></tr>
+<tr><th style='background-color:red; color:white;'>Red</th><th>Very High</th><td>Resiko sangat tinggi, api sangat sulit dikendalikan.</td></tr>
 </thead>
 </table>
 """, unsafe_allow_html=True)
@@ -185,19 +191,19 @@ with col3:
     tanah = st.number_input("Kelembaban Tanah (%)", value=50.0)
 
 if st.button("Prediksi Manual"):
-    manual_df = pd.DataFrame([{
+    input_manual = pd.DataFrame([{
         'Tavg: Temperatur rata-rata (°C)': suhu,
         'RH_avg: Kelembapan rata-rata (%)': kelembapan,
         'RR: Curah hujan (mm)': curah,
         'ff_avg: Kecepatan angin rata-rata (m/s)': angin,
         'Kelembaban Permukaan Tanah': tanah
     }])
-    scaled_manual = scaler.transform(manual_df)
-    manual_label = convert_to_label(model.predict(scaled_manual)[0])
-    c, bg = risk_styles.get(manual_label, ("black", "white"))
+    scaled_input = scaler.transform(input_manual)
+    pred_label = convert_to_label(model.predict(scaled_input)[0])
+    font, bg = risk_styles.get(pred_label, ("black", "white"))
     st.markdown(
-        f"<p style='color:{c}; background-color:{bg}; padding:10px; border-radius:5px;'>"
-        f"Prediksi Risiko Kebakaran: <b>{manual_label}</b></p>",
+        f"<p style='color:{font}; background-color:{bg}; padding:10px; border-radius:5px;'>"
+        f"Prediksi Risiko Kebakaran: <b>{pred_label}</b></p>",
         unsafe_allow_html=True
     )
 
