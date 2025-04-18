@@ -74,6 +74,11 @@ def load_data():
 st.cache_data.clear()
 df = load_data()
 
+
+# Tambahkan garis horizontal di atas header
+st.markdown("<hr style='margin-top: 5px; margin-bottom: 20px;'>", unsafe_allow_html=True)
+
+
 # === HEADER ===
 col1, col2 = st.columns([1, 9])
 with col1:
