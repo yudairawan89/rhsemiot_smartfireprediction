@@ -257,17 +257,24 @@ if st.session_state.manual_result:
 st.markdown("<br><hr>", unsafe_allow_html=True)
 
 st.markdown("""
-<div style='display: flex; justify-content: center; align-items: center; gap: 60px; margin-top: 20px;'>
-    <img src='logo.png' style='width:140px; height:auto; margin-right: 60px;'/>
-    
-    <div style='text-align: center; min-width: 450px;'>
+<div style='display: flex; justify-content: center; align-items: center; margin-top: 20px;'>
+
+    <!-- Logo Kiri -->
+    <div style='flex: 1; text-align: right; padding-right: 40px;'>
+        <img src='logo.png' style='width:140px; height:auto;'/>
+    </div>
+
+    <!-- Teks Tengah -->
+    <div style='flex: 2; text-align: center; min-width: 450px;'>
         <h4 style='margin-bottom: 5px;'>Smart Fire Prediction RHSEM – IoT Model</h4>
         <p style='font-size: 16px;'>Dikembangkan oleh Mahasiswa Universitas Putera Indonesia YPTK Padang Tahun 2025</p>
     </div>
-    
-    <img src='upi.png' style='width:190px; height:auto; margin-left: 60px;'/>
+
+    <!-- Logo Kanan -->
+    <div style='flex: 1; text-align: left; padding-left: 40px;'>
+        <img src='upi.png' style='width:190px; height:auto;'/>
+    </div>
+
 </div>
 """, unsafe_allow_html=True)
-
-
 
