@@ -184,7 +184,7 @@ if df is not None and not df.empty:
 # === PREDIKSI MANUAL ===
 st.markdown("<div class='section-title'>Pengujian Menggunakan Data Manual</div>", unsafe_allow_html=True)
 
-# Default inisialisasi input manual
+# Inisialisasi default
 if "manual_input" not in st.session_state:
     st.session_state.manual_input = {
         "suhu": 30.0,
@@ -196,10 +196,10 @@ if "manual_input" not in st.session_state:
 if "manual_result" not in st.session_state:
     st.session_state.manual_result = None
 
-# Input fields
+# Input manual dibaca dari dictionary
 col1, col2, col3 = st.columns(3)
 with col1:
-    suhu = st.number_input("Suhu Udara (°C)", value=st.session_state.manual_input["suhu"], key="suhu_input", label_visibility="visible")
+    suhu = st.number_input("Suhu Udara (°C)", value=st.session_state.manual_input["suhu"], key="suhu_input")
     kelembapan = st.number_input("Kelembapan Udara (%)", value=st.session_state.manual_input["kelembapan"], key="kelembapan_input")
 with col2:
     curah = st.number_input("Curah Hujan (mm)", value=st.session_state.manual_input["curah"], key="curah_input")
@@ -207,8 +207,8 @@ with col2:
 with col3:
     tanah = st.number_input("Kelembaban Tanah (%)", value=st.session_state.manual_input["tanah"], key="tanah_input")
 
-# Tombol aksi berdempetan
-col_pred, col_reset, _ = st.columns([1, 1, 8])
+# Tombol aksi: prediksi dan reset
+col_pred, col_reset = st.columns([1, 1])
 with col_pred:
     if st.button("🔍 Prediksi Manual"):
         input_df = pd.DataFrame([{
@@ -229,7 +229,7 @@ with col_pred:
         })
 
 with col_reset:
-    if st.button("🧼 Reset Manual"):
+    if st.button("🔄 Reset Manual"):
         st.session_state.manual_input = {
             "suhu": 0.0,
             "kelembapan": 0.0,
@@ -238,8 +238,8 @@ with col_reset:
             "tanah": 0.0
         }
         st.session_state.manual_result = None
-        # Rerun otomatis agar inputan langsung refresh ke suhu dan bisa langsung diketik
-        st.rerun()
+        # rerun supaya input disetel ulang
+        st.experimental_rerun()
 
 # Tampilkan hasil prediksi
 if st.session_state.manual_result:
