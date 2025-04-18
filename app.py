@@ -255,19 +255,12 @@ if st.session_state.manual_result:
 
 # === FOOTER ===
 st.markdown("<br><hr>", unsafe_allow_html=True)
-col_logo1, col_text, col_logo2 = st.columns([3.5, 5, 3.5])  # Update agar logo kiri lebih ke tengah
 
-with col_logo1:
-    st.image("logo.png", width=130)  # Smart Fire
+st.markdown("""
+    <div style='text-align: center; margin-top: 20px;'>
+        <h4 style='margin-bottom: 5px;'>Smart Fire Prediction RHSEM – IoT Model</h4>
+        <p style='font-size: 16px;'>Dikembangkan oleh Mahasiswa Universitas Putera Indonesia YPTK Padang Tahun 2025</p>
+    </div>
+""", unsafe_allow_html=True)
 
-with col_text:
-    st.markdown("""
-        <div style='text-align: center;'>
-            <h4 style='margin-bottom: 5px;'>Smart Fire Prediction RHSEM – IoT Model</h4>
-            <p style='font-size: 16px;'>Dikembangkan oleh Mahasiswa Universitas Putera Indonesia YPTK Padang Tahun 2025</p>
-        </div>
-    """, unsafe_allow_html=True)
-
-with col_logo2:
-    st.image("upi.png", width=190)  # UPI
 
