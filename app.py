@@ -204,47 +204,6 @@ st.download_button(
 
 
 
-import plotly.graph_objects as go
-
-# === ANIMATED LINE CHART PERUBAHAN SENSOR ===
-st.markdown("<div class='section-title' style='margin-top:40px;'>Grafik Perubahan Sensor Realtime (Auto Refresh)</div>", unsafe_allow_html=True)
-
-# Ambil hanya 10 data terakhir agar ringan divisualisasi
-df_latest = df.copy()
-df_latest['Waktu'] = pd.to_datetime(df_latest['Waktu'])
-df_latest = df_latest.sort_values(by='Waktu').tail(10)
-
-fig = go.Figure()
-
-# Tambahkan setiap sensor sebagai line
-fig.add_trace(go.Scatter(x=df_latest['Waktu'], y=df_latest['Tavg: Temperatur rata-rata (°C)'],
-                         mode='lines+markers', name='Suhu (°C)'))
-
-fig.add_trace(go.Scatter(x=df_latest['Waktu'], y=df_latest['RH_avg: Kelembapan rata-rata (%)'],
-                         mode='lines+markers', name='Kelembapan Udara (%)'))
-
-fig.add_trace(go.Scatter(x=df_latest['Waktu'], y=df_latest['RR: Curah hujan (mm)'],
-                         mode='lines+markers', name='Curah Hujan (mm)'))
-
-fig.add_trace(go.Scatter(x=df_latest['Waktu'], y=df_latest['ff_avg: Kecepatan angin rata-rata (m/s)'],
-                         mode='lines+markers', name='Angin (m/s)'))
-
-fig.add_trace(go.Scatter(x=df_latest['Waktu'], y=df_latest['Kelembaban Permukaan Tanah'],
-                         mode='lines+markers', name='Kelembaban Tanah (%)'))
-
-# Layout chart
-fig.update_layout(
-    height=400,
-    margin=dict(l=20, r=20, t=30, b=20),
-    xaxis_title='Waktu',
-    yaxis_title='Nilai Sensor',
-    template='plotly_white',
-    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
-)
-
-# Tampilkan chart
-st.plotly_chart(fig, use_container_width=True)
-
 
 
 # === PREDIKSI MANUAL ===
