@@ -184,64 +184,73 @@ if df is not None and not df.empty:
 # === PREDIKSI MANUAL ===
 st.markdown("<div class='section-title'>Pengujian Menggunakan Data Manual</div>", unsafe_allow_html=True)
 
-# Inisialisasi session_state untuk menyimpan hasil prediksi manual (sekali saja)
+# Inisialisasi default
+if "manual_input" not in st.session_state:
+    st.session_state.manual_input = {
+        "suhu": 30.0,
+        "kelembapan": 65.0,
+        "curah": 10.0,
+        "angin": 3.0,
+        "tanah": 50.0
+    }
 if "manual_result" not in st.session_state:
-    st.session_state["manual_result"] = None
+    st.session_state.manual_result = None
 
-# Inisialisasi nilai default input hanya sekali
-if "manual_default_set" not in st.session_state:
-    st.session_state["suhu"] = 30.0
-    st.session_state["kelembapan"] = 65.0
-    st.session_state["curah"] = 10.0
-    st.session_state["angin"] = 3.0
-    st.session_state["tanah"] = 50.0
-    st.session_state["manual_default_set"] = True
-
-# Tampilkan input
+# Input manual dibaca dari dictionary
 col1, col2, col3 = st.columns(3)
 with col1:
-    st.number_input("Suhu Udara (°C)", key="suhu")
-    st.number_input("Kelembapan Udara (%)", key="kelembapan")
+    suhu = st.number_input("Suhu Udara (°C)", value=st.session_state.manual_input["suhu"], key="suhu_input")
+    kelembapan = st.number_input("Kelembapan Udara (%)", value=st.session_state.manual_input["kelembapan"], key="kelembapan_input")
 with col2:
-    st.number_input("Curah Hujan (mm)", key="curah")
-    st.number_input("Kecepatan Angin (m/s)", key="angin")
+    curah = st.number_input("Curah Hujan (mm)", value=st.session_state.manual_input["curah"], key="curah_input")
+    angin = st.number_input("Kecepatan Angin (m/s)", value=st.session_state.manual_input["angin"], key="angin_input")
 with col3:
-    st.number_input("Kelembaban Tanah (%)", key="tanah")
+    tanah = st.number_input("Kelembaban Tanah (%)", value=st.session_state.manual_input["tanah"], key="tanah_input")
 
-# Tombol prediksi dan reset
-btn1, btn2 = st.columns([1, 1])
-with btn1:
+# Tombol aksi: prediksi dan reset
+col_pred, col_reset = st.columns([1, 1])
+with col_pred:
     if st.button("🔍 Prediksi Manual"):
         input_df = pd.DataFrame([{
-            'Tavg: Temperatur rata-rata (°C)': st.session_state["suhu"],
-            'RH_avg: Kelembapan rata-rata (%)': st.session_state["kelembapan"],
-            'RR: Curah hujan (mm)': st.session_state["curah"],
-            'ff_avg: Kecepatan angin rata-rata (m/s)': st.session_state["angin"],
-            'Kelembaban Permukaan Tanah': st.session_state["tanah"]
+            'Tavg: Temperatur rata-rata (°C)': suhu,
+            'RH_avg: Kelembapan rata-rata (%)': kelembapan,
+            'RR: Curah hujan (mm)': curah,
+            'ff_avg: Kecepatan angin rata-rata (m/s)': angin,
+            'Kelembaban Permukaan Tanah': tanah
         }])
         scaled_manual = scaler.transform(input_df)
-        hasil = convert_to_label(model.predict(scaled_manual)[0])
-        st.session_state["manual_result"] = hasil
+        st.session_state.manual_result = convert_to_label(model.predict(scaled_manual)[0])
+        st.session_state.manual_input.update({
+            "suhu": suhu,
+            "kelembapan": kelembapan,
+            "curah": curah,
+            "angin": angin,
+            "tanah": tanah
+        })
 
-with btn2:
+with col_reset:
     if st.button("🔄 Reset Manual"):
-        st.session_state["suhu"] = 0.0
-        st.session_state["kelembapan"] = 0.0
-        st.session_state["curah"] = 0.0
-        st.session_state["angin"] = 0.0
-        st.session_state["tanah"] = 0.0
-        st.session_state["manual_result"] = None
+        st.session_state.manual_input = {
+            "suhu": 0.0,
+            "kelembapan": 0.0,
+            "curah": 0.0,
+            "angin": 0.0,
+            "tanah": 0.0
+        }
+        st.session_state.manual_result = None
+        # rerun supaya input disetel ulang
         st.experimental_rerun()
 
-# Tampilkan hasil prediksi manual jika ada
-if st.session_state["manual_result"]:
-    hasil = st.session_state["manual_result"]
+# Tampilkan hasil prediksi
+if st.session_state.manual_result:
+    hasil = st.session_state.manual_result
     font, bg = risk_styles.get(hasil, ("black", "white"))
     st.markdown(
         f"<p style='color:{font}; background-color:{bg}; padding:10px; border-radius:5px;'>"
         f"Prediksi Risiko Kebakaran: <b>{hasil}</b></p>",
         unsafe_allow_html=True
     )
+
 
 
 
