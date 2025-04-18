@@ -257,21 +257,18 @@ if st.session_state.manual_result:
 
 # === FOOTER ===
 st.markdown("<br><hr>", unsafe_allow_html=True)
-col_logo1, col_text, col_logo2 = st.columns([3.7, 4.6, 3.7])  # Perbaikan proporsi agar logo kiri lebih ke tengah
 
-with col_logo1:
-    st.image("logo.png", width=130)  # Smart Fire Logo
+st.markdown("""
+<div style='display: flex; justify-content: center; align-items: center; gap: 60px; margin-top: 20px;'>
+    <img src='logo.png' style='width:130px; height:auto;'/>
+    <div style='text-align: center;'>
+        <h4 style='margin-bottom: 5px;'>Smart Fire Prediction RHSEM – IoT Model</h4>
+        <p style='font-size: 16px;'>Dikembangkan oleh Mahasiswa Universitas Putera Indonesia YPTK Padang Tahun 2025</p>
+    </div>
+    <img src='upi.png' style='width:190px; height:auto;'/>
+</div>
+""", unsafe_allow_html=True)
 
-with col_text:
-    st.markdown("""
-        <div style='text-align: center;'>
-            <h4 style='margin-bottom: 5px;'>Smart Fire Prediction RHSEM – IoT Model</h4>
-            <p style='font-size: 16px;'>Dikembangkan oleh Mahasiswa Universitas Putera Indonesia YPTK Padang Tahun 2025</p>
-        </div>
-    """, unsafe_allow_html=True)
-
-with col_logo2:
-    st.image("upi.png", width=190)  # UPI Logo
 
 
 
