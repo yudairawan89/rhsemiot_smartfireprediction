@@ -282,10 +282,18 @@ if st.session_state.manual_result:
 st.markdown("<br><hr>", unsafe_allow_html=True)
 
 st.markdown("""
-    <div style='text-align: center; margin-top: 20px;'>
-        <h4 style='margin-bottom: 5px;'>Smart Fire Prediction RHSEM – IoT Model</h4>
-        <p style='font-size: 16px;'>Dikembangkan oleh Mahasiswa Universitas Putera Indonesia YPTK Padang Tahun 2025</p>
-    </div>
+<div style='
+    margin-top: 20px;
+    background-color: black;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+'>
+    <h4 style='margin-bottom: 5px;'>Smart Fire Prediction RHSEM – IoT Model</h4>
+    <p style='font-size: 16px;'>Dikembangkan oleh Mahasiswa Universitas Putera Indonesia YPTK Padang Tahun 2025</p>
+</div>
 """, unsafe_allow_html=True)
+
 
 
