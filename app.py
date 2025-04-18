@@ -253,24 +253,24 @@ if st.session_state.manual_result:
 
 
 
-
-
 # === FOOTER ===
 st.markdown("<br><hr>", unsafe_allow_html=True)
 
-st.markdown("""
-<div style='display: flex; justify-content: center; align-items: center; gap: 60px; margin-top: 20px;'>
-    <img src='logo.png' style='width:130px; height:auto;'/>
-    <div style='text-align: center;'>
-        <h4 style='margin-bottom: 5px;'>Smart Fire Prediction RHSEM – IoT Model</h4>
-        <p style='font-size: 16px;'>Dikembangkan oleh Mahasiswa Universitas Putera Indonesia YPTK Padang Tahun 2025</p>
-    </div>
-    <img src='upi.png' style='width:190px; height:auto;'/>
-</div>
-""", unsafe_allow_html=True)
+col1, col2, col3 = st.columns([2.5, 6, 2.5])
 
+with col1:
+    st.image("logo.png", width=140)  # Logo kiri (Smart Fire)
 
+with col2:
+    st.markdown("""
+        <div style='text-align: center;'>
+            <h4 style='margin-bottom: 5px;'>Smart Fire Prediction RHSEM – IoT Model</h4>
+            <p style='font-size: 16px;'>Dikembangkan oleh Mahasiswa Universitas Putera Indonesia YPTK Padang Tahun 2025</p>
+        </div>
+    """, unsafe_allow_html=True)
 
+with col3:
+    st.image("upi.png", width=190)  # Logo kanan (UPI)
 
 
 
