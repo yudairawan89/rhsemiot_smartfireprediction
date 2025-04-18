@@ -5,6 +5,7 @@ import pandas as pd
 import joblib
 from streamlit_autorefresh import st_autorefresh
 from datetime import datetime
+from io import BytesIO
 
 # === AUTO REFRESH ===
 st_autorefresh(interval=3000, key="data_refresh")
@@ -160,8 +161,18 @@ if df is not None and not df.empty:
     st.markdown("<div class='section-title'>Data Sensor Lengkap</div>", unsafe_allow_html=True)
     st.dataframe(df[['Waktu'] + fitur + ['Prediksi Kebakaran']].tail(10), use_container_width=True)
 
-    csv = df.to_csv(index=False)
-    st.download_button("\U0001F4E5 Download Hasil Prediksi Kebakaran sebagai CSV", data=csv, file_name='hasil_prediksi_kebakaran.csv', mime='text/csv')
+    # === EXPORT TO XLSX ===
+    output = BytesIO()
+    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+        df.to_excel(writer, index=False, sheet_name='DataSensor')
+    xlsx_data = output.getvalue()
+
+    st.download_button(
+        label="\U0001F4E5 Download Hasil Prediksi Kebakaran sebagai XLSX",
+        data=xlsx_data,
+        file_name='hasil_prediksi_kebakaran.xlsx',
+        mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
 
     # === PREDIKSI MANUAL ===
     st.markdown("<div class='section-title'>Pengujian Menggunakan Data Manual</div>", unsafe_allow_html=True)
