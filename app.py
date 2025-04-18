@@ -119,13 +119,13 @@ if sensor_data is not None and model is not None and scaler is not None:
         'Kelembapan Udara': 'RH_avg: Kelembapan rata-rata (%)',
         'Curah Hujan/Jam': 'RR: Curah hujan (mm)',
         'Kecepatan Angin (ms)': 'ff_avg: Kecepatan angin rata-rata (m/s)',
-        'Kelembapan Tanah': 'Kelembaban Perbukaan Tanah',
+        'Kelembapan Tanah': 'Kelembaban Permukaan Tanah',
         'Waktu': 'Waktu'  # Pastikan ada kolom waktu
     })
 
     # Fitur yang akan diprediksi
     fitur = ['Tavg: Temperatur rata-rata (°C)', 'RH_avg: Kelembapan rata-rata (%)', 'RR: Curah hujan (mm)',
-             'ff_avg: Kecepatan angin rata-rata (m/s)', 'Kelembaban Perbukaan Tanah']
+             'ff_avg: Kecepatan angin rata-rata (m/s)', 'Kelembaban Permukaan Tanah']
 
     if all(col in sensor_data.columns for col in fitur):
         fitur_data = sensor_data[fitur]
@@ -180,7 +180,7 @@ if sensor_data is not None and model is not None and scaler is not None:
         """, unsafe_allow_html=True)
 
         sensor_html = pd.DataFrame({
-            "Variabel": ["Tavg: Temperatur rata-rata (°C)", "RH_avg: Kelembapan rata-rata (%)", "RR: Curah hujan (mm)", "ff_avg: Kecepatan angin rata-rata (m/s)", "Kelembaban Perbukaan Tanah"],
+            "Variabel": ["Tavg: Temperatur rata-rata (°C)", "RH_avg: Kelembapan rata-rata (%)", "RR: Curah hujan (mm)", "ff_avg: Kecepatan angin rata-rata (m/s)", "Kelembaban Permukaan Tanah"],
             "Value": last_row[fitur].values
         }).to_html(index=False)
 
@@ -284,7 +284,7 @@ if model is not None and scaler is not None:
         'RH_avg: Kelembapan rata-rata (%)': [kelembapan_udara],
         'RR: Curah hujan (mm)': [curah_hujan],
         'ff_avg: Kecepatan angin rata-rata (m/s)': [kecepatan_angin],
-        'Kelembaban Perbukaan Tanah': [kelembapan_tanah]
+        'Kelembaban Permukaan Tanah': [kelembapan_tanah]
     })
 
     # Pra-pemrosesan input pengguna menggunakan scaler yang sudah dilatih
