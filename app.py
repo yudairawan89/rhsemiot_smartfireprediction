@@ -49,12 +49,7 @@ risk_styles = {
     "Very High": ("white", "red")
 }
 
-# === LOAD DATA, MODEL, SCALER ===
-@st.cache_data
-def load_data():
-    url = "https://docs.google.com/spreadsheets/d/1ZscUJ6SLPIF33t8ikVHUmR68b-y3Q9_r_p9d2rDRMCM/export?format=csv"
-    return pd.read_csv(url)
-
+# === LOAD MODEL DAN SCALER ===
 @st.cache_resource
 def load_model():
     return joblib.load("RHSEM_IoT_Model.joblib")
@@ -63,9 +58,17 @@ def load_model():
 def load_scaler():
     return joblib.load("scaler.joblib")
 
-df = load_data()
 model = load_model()
 scaler = load_scaler()
+
+# === BACA DATA TANPA CACHE ===
+def load_data():
+    url = "https://docs.google.com/spreadsheets/d/1ZscUJ6SLPIF33t8ikVHUmR68b-y3Q9_r_p9d2rDRMCM/export?format=csv"
+    return pd.read_csv(url)
+
+# force load terbaru
+st.cache_data.clear()
+df = load_data()
 
 # === HEADER ===
 col1, col2 = st.columns([1, 9])
