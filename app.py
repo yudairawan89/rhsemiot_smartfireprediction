@@ -152,40 +152,35 @@ if df is not None and not df.empty:
 # === TABEL TINGKAT RISIKO ===
 st.markdown("<div class='section-title'>Tabel Tingkat Resiko dan Intensitas Kebakaran</div>", unsafe_allow_html=True)
 st.markdown("""
-    <div class="scrollable-table">
-    <table style='width: 100%; border-collapse: collapse;'>
-        <thead>
-            <tr style='background-color:#f2f2f2;'>
-                <th>Warna</th>
-                <th>Tingkat Resiko / Intensitas</th>
-                <th>Keterangan</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr style='background-color:blue; color:white;'>
-                <td><b>Blue</b></td>
-                <td>Low</td>
-                <td>Tingkat resiko kebakaran rendah. Intensitas api pada kategori rendah. Api mudah dikendalikan, cenderung akan padam dengan sendirinya.</td>
-            </tr>
-            <tr style='background-color:green; color:white;'>
-                <td><b>Green</b></td>
-                <td>Moderate</td>
-                <td>Tingkat resiko kebakaran sedang. Intensitas api pada kategori sedang. Api relatif masih cukup mudah dikendalikan.</td>
-            </tr>
-            <tr style='background-color:yellow; color:black;'>
-                <td><b>Yellow</b></td>
-                <td>High</td>
-                <td>Tingkat resiko kebakaran tinggi. Intensitas api pada kategori tinggi. Api sulit dikendalikan.</td>
-            </tr>
-            <tr style='background-color:red; color:white;'>
-                <td><b>Red</b></td>
-                <td>Very High</td>
-                <td>Tingkat resiko kebakaran sangat tinggi. Intensitas api pada kategori sangat tinggi. Api sangat sulit dikendalikan.</td>
-            </tr>
-        </tbody>
-    </table>
-    </div>
+<div class="scrollable-table" style="margin-bottom: 25px;">
+<table style='width: 100%; border-collapse: collapse;'>
+    <thead>
+        <tr>
+            <th style='background-color:#e0e0e0;'>Warna</th>
+            <th style='background-color:#e0e0e0;'>Tingkat Resiko / Intensitas</th>
+            <th style='background-color:#e0e0e0;'>Keterangan</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr style='background-color:blue; color:white;'>
+            <td>Blue</td><td>Low</td><td style='text-align:left; padding-left: 20px;'>Tingkat resiko kebakaran rendah. Intensitas api pada kategori rendah. Api mudah dikendalikan, cenderung akan padam dengan sendirinya.</td>
+        </tr>
+        <tr style='background-color:green; color:white;'>
+            <td>Green</td><td>Moderate</td><td style='text-align:left; padding-left: 20px;'>Tingkat resiko kebakaran sedang. Intensitas api pada kategori sedang. Api relatif masih cukup mudah dikendalikan.</td>
+        </tr>
+        <tr style='background-color:yellow; color:black;'>
+            <td>Yellow</td><td>High</td><td style='text-align:left; padding-left: 20px;'>Tingkat resiko kebakaran tinggi. Intensitas api pada kategori tinggi. Api sulit dikendalikan.</td>
+        </tr>
+        <tr style='background-color:red; color:white;'>
+            <td>Red</td><td>Very High</td><td style='text-align:left; padding-left: 20px;'>Tingkat resiko kebakaran sangat tinggi. Intensitas api pada kategori sangat tinggi. Api sangat sulit dikendalikan.</td>
+        </tr>
+    </tbody>
+</table>
+</div>
 """, unsafe_allow_html=True)
+
+
+
 
 # === TABEL DATA SENSOR ===
 st.markdown("<div class='section-title' style='margin-top: 30px;'>Data Sensor Lengkap</div>", unsafe_allow_html=True)
