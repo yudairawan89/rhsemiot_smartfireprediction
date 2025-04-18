@@ -145,43 +145,43 @@ if df is not None and not df.empty:
         unsafe_allow_html=True
     )
 
-# === TABEL TINGKAT RISIKO ===
 st.markdown("<div class='section-title'>Tabel Tingkat Resiko dan Intensitas Kebakaran</div>", unsafe_allow_html=True)
 st.markdown("""
 <div class="scrollable-table">
-<table style='width: 100%; border: 1px solid #ccc; border-collapse: collapse;'>
-    <thead>
-        <tr>
-            <th style='background-color: #f0f0f0;'>Warna</th>
-            <th style='background-color: #f0f0f0;'>Tingkat Resiko / Intensitas</th>
-            <th style='background-color: #f0f0f0;'>Keterangan</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td style='background-color: blue; color: white; text-align: center;'>Blue</td>
-            <td style='text-align: center;'>Low</td>
-            <td style='text-align: left;'>Tingkat resiko kebakaran rendah. Intensitas api pada kategori rendah. Api mudah dikendalikan, cenderung akan padam dengan sendirinya.</td>
-        </tr>
-        <tr>
-            <td style='background-color: green; color: white; text-align: center;'>Green</td>
-            <td style='text-align: center;'>Moderate</td>
-            <td style='text-align: left;'>Tingkat resiko kebakaran sedang. Intensitas api pada kategori sedang. Api relatif masih cukup mudah dikendalikan.</td>
-        </tr>
-        <tr>
-            <td style='background-color: yellow; text-align: center;'>Yellow</td>
-            <td style='text-align: center;'>High</td>
-            <td style='text-align: left;'>Tingkat resiko kebakaran tinggi. Intensitas api pada kategori tinggi. Api sulit dikendalikan.</td>
-        </tr>
-        <tr>
-            <td style='background-color: red; color: white; text-align: center;'>Red</td>
-            <td style='text-align: center;'>Very High</td>
-            <td style='text-align: left;'>Tingkat resiko kebakaran sangat tinggi. Intensitas api pada kategori sangat tinggi. Api sangat sulit dikendalikan.</td>
-        </tr>
-    </tbody>
-</table>
+    <table style='width: 100%; border-collapse: collapse;'>
+        <thead>
+            <tr style='background-color:#f1f1f1;'>
+                <th style='text-align: center;'>Warna</th>
+                <th style='text-align: center;'>Tingkat Resiko / Intensitas</th>
+                <th style='text-align: center;'>Keterangan</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style='background-color: blue; color: white;'>
+                <td style='text-align: center; font-weight: bold;'>Blue</td>
+                <td style='text-align: center;'>Low</td>
+                <td style='text-align: left;'>Tingkat resiko kebakaran rendah. Intensitas api pada kategori rendah. Api mudah dikendalikan, cenderung akan padam dengan sendirinya.</td>
+            </tr>
+            <tr style='background-color: green; color: white;'>
+                <td style='text-align: center; font-weight: bold;'>Green</td>
+                <td style='text-align: center;'>Moderate</td>
+                <td style='text-align: left;'>Tingkat resiko kebakaran sedang. Intensitas api pada kategori sedang. Api relatif masih cukup mudah dikendalikan.</td>
+            </tr>
+            <tr style='background-color: yellow; color: black;'>
+                <td style='text-align: center; font-weight: bold;'>Yellow</td>
+                <td style='text-align: center;'>High</td>
+                <td style='text-align: left;'>Tingkat resiko kebakaran tinggi. Intensitas api pada kategori tinggi. Api sulit dikendalikan.</td>
+            </tr>
+            <tr style='background-color: red; color: white;'>
+                <td style='text-align: center; font-weight: bold;'>Red</td>
+                <td style='text-align: center;'>Very High</td>
+                <td style='text-align: left;'>Tingkat resiko kebakaran sangat tinggi. Intensitas api pada kategori sangat tinggi. Api sangat sulit dikendalikan.</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 """, unsafe_allow_html=True)
+
 
 # === TABEL SENSOR LENGKAP ===
 st.markdown("<div class='section-title'>Data Sensor Lengkap</div>", unsafe_allow_html=True)
