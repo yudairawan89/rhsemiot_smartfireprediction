@@ -184,53 +184,64 @@ if df is not None and not df.empty:
 # === PREDIKSI MANUAL ===
 st.markdown("<div class='section-title'>Pengujian Menggunakan Data Manual</div>", unsafe_allow_html=True)
 
-if "suhu" not in st.session_state:
-    st.session_state.update({
+# Inisialisasi session state hanya sekali
+if "manual_inputs" not in st.session_state:
+    st.session_state.manual_inputs = {
         "suhu": 30.0,
         "kelembapan": 65.0,
         "curah": 10.0,
         "angin": 3.0,
         "tanah": 50.0,
-        "manual_result": None
-    })
+        "hasil": None
+    }
 
+# Kolom input
 col1, col2, col3 = st.columns(3)
 with col1:
-    suhu = st.number_input("Suhu Udara (°C)", value=st.session_state["suhu"], key="suhu", on_change=lambda: None)
-    kelembapan = st.number_input("Kelembapan Udara (%)", value=st.session_state["kelembapan"], key="kelembapan", on_change=lambda: None)
+    st.session_state.manual_inputs["suhu"] = st.number_input("Suhu Udara (°C)", value=st.session_state.manual_inputs["suhu"], key="suhu_input")
+    st.session_state.manual_inputs["kelembapan"] = st.number_input("Kelembapan Udara (%)", value=st.session_state.manual_inputs["kelembapan"], key="kelembapan_input")
 with col2:
-    curah = st.number_input("Curah Hujan (mm)", value=st.session_state["curah"], key="curah", on_change=lambda: None)
-    angin = st.number_input("Kecepatan Angin (m/s)", value=st.session_state["angin"], key="angin", on_change=lambda: None)
+    st.session_state.manual_inputs["curah"] = st.number_input("Curah Hujan (mm)", value=st.session_state.manual_inputs["curah"], key="curah_input")
+    st.session_state.manual_inputs["angin"] = st.number_input("Kecepatan Angin (m/s)", value=st.session_state.manual_inputs["angin"], key="angin_input")
 with col3:
-    tanah = st.number_input("Kelembaban Tanah (%)", value=st.session_state["tanah"], key="tanah", on_change=lambda: None)
+    st.session_state.manual_inputs["tanah"] = st.number_input("Kelembaban Tanah (%)", value=st.session_state.manual_inputs["tanah"], key="tanah_input")
 
+# Tombol prediksi dan reset
 col_pred, col_reset = st.columns([1, 1])
 with col_pred:
     if st.button("🔍 Prediksi Manual"):
         input_df = pd.DataFrame([{
-            'Tavg: Temperatur rata-rata (°C)': suhu,
-            'RH_avg: Kelembapan rata-rata (%)': kelembapan,
-            'RR: Curah hujan (mm)': curah,
-            'ff_avg: Kecepatan angin rata-rata (m/s)': angin,
-            'Kelembaban Permukaan Tanah': tanah
+            'Tavg: Temperatur rata-rata (°C)': st.session_state.manual_inputs["suhu"],
+            'RH_avg: Kelembapan rata-rata (%)': st.session_state.manual_inputs["kelembapan"],
+            'RR: Curah hujan (mm)': st.session_state.manual_inputs["curah"],
+            'ff_avg: Kecepatan angin rata-rata (m/s)': st.session_state.manual_inputs["angin"],
+            'Kelembaban Permukaan Tanah': st.session_state.manual_inputs["tanah"]
         }])
         scaled_manual = scaler.transform(input_df)
         hasil = convert_to_label(model.predict(scaled_manual)[0])
-        st.session_state["manual_result"] = hasil
+        st.session_state.manual_inputs["hasil"] = hasil
 
 with col_reset:
     if st.button("🔄 Reset"):
-        for key in ["suhu", "kelembapan", "curah", "angin", "tanah", "manual_result"]:
-            st.session_state[key] = 0.0 if key != "manual_result" else None
-        st.experimental_rerun()
+        st.session_state.manual_inputs = {
+            "suhu": 0.0,
+            "kelembapan": 0.0,
+            "curah": 0.0,
+            "angin": 0.0,
+            "tanah": 0.0,
+            "hasil": None
+        }
+        st.rerun()
 
-if st.session_state.get("manual_result"):
-    hasil = st.session_state["manual_result"]
+# Tampilkan hasil
+if st.session_state.manual_inputs["hasil"]:
+    hasil = st.session_state.manual_inputs["hasil"]
     font, bg = risk_styles.get(hasil, ("black", "white"))
     st.markdown(
         f"<p style='color:{font}; background-color:{bg}; padding:10px; border-radius:5px;'>"
         f"Prediksi Risiko Kebakaran: <b>{hasil}</b></p>", unsafe_allow_html=True
     )
+
 
 
 # === FOOTER ===
