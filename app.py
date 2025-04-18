@@ -144,3 +144,22 @@ if df is not None and not df.empty:
         f"<span style='text-decoration: underline; font-size: 22px;'>{prediction_label}</span></p>",
         unsafe_allow_html=True
     )
+
+    # === TAMBAHAN TABEL KETERANGAN DAN DATA SENSOR ===
+    st.markdown("<div class='section-title'>Tabel Tingkat Resiko dan Intensitas Kebakaran</div>", unsafe_allow_html=True)
+    st.markdown("""
+    <table>
+        <thead>
+            <tr><th style='background-color:blue; color:white;'>Blue</th><th>Low</th><td>Tingkat resiko kebakaran rendah. Api mudah dikendalikan dan cenderung padam sendiri.</td></tr>
+            <tr><th style='background-color:green; color:white;'>Green</th><th>Moderate</th><td>Tingkat resiko kebakaran sedang. Api relatif masih dapat dikendalikan.</td></tr>
+            <tr><th style='background-color:yellow;'>Yellow</th><th>High</th><td>Tingkat resiko kebakaran tinggi. Api mulai sulit dikendalikan.</td></tr>
+            <tr><th style='background-color:red; color:white;'>Red</th><th>Very High</th><td>Tingkat resiko sangat tinggi. Api sangat sulit dikendalikan.</td></tr>
+        </thead>
+    </table>
+    """, unsafe_allow_html=True)
+
+    st.markdown("<div class='section-title'>Data Sensor Lengkap</div>", unsafe_allow_html=True)
+    st.dataframe(df[['Waktu'] + fitur + ['Prediksi Kebakaran']].tail(10), use_container_width=True)
+
+    csv = df.to_csv(index=False)
+    st.download_button("\U0001F4E5 Download Hasil Prediksi Kebakaran sebagai CSV", data=csv, file_name='hasil_prediksi_kebakaran.csv', mime='text/csv')
