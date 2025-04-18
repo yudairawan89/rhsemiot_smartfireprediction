@@ -257,16 +257,20 @@ if st.session_state.manual_result:
 
 # === FOOTER ===
 st.markdown("<br><hr>", unsafe_allow_html=True)
-col_logo1, col_text, col_logo2 = st.columns([1, 6, 1])
+col_logo1, col_text, col_logo2 = st.columns([2, 6, 2])
+
 with col_logo1:
-    st.image("logo.png", width=80)
+    st.image("logo.png", width=120)  # ukuran diperbesar
+
 with col_text:
     st.markdown("""
-        <center>
-        <h4>Smart Fire Prediction RHSEM – IoT Model</h4>
-        <p>Dikembangkan oleh Mahasiswa Universitas Putera Indonesia YPTK Padang Tahun 2025</p>
-        </center>
+        <div style='text-align: center;'>
+            <h4 style='margin-bottom: 5px;'>Smart Fire Prediction RHSEM – IoT Model</h4>
+            <p style='font-size: 16px;'>Dikembangkan oleh Mahasiswa Universitas Putera Indonesia YPTK Padang Tahun 2025</p>
+        </div>
     """, unsafe_allow_html=True)
+
 with col_logo2:
-    st.image("upi.png", width=80)
+    st.image("upi.png", width=120)  # ukuran diperbesar
+
 
