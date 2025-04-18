@@ -290,7 +290,7 @@ st.markdown("""
     text-align: center;
     color: white;
 '>
-    <p style='margin: 0; font-size: 20px; font-weight: bold; line-height: 1.2;'>Smart Fire Prediction RHSEM – IoT Model</p>
+    <p style='margin: 0; font-size: 30px; font-weight: bold; line-height: 1.2;'>Smart Fire Prediction RHSEM – IoT Model</p>
     <p style='margin: 0; font-size: 13px; line-height: 1.2;'>Dikembangkan oleh Mahasiswa Universitas Putera Indonesia YPTK Padang Tahun 2025</p>
 </div>
 """, unsafe_allow_html=True)
