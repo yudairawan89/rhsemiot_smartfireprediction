@@ -126,18 +126,17 @@ scaled = scaler.transform(clean_input_df)
 prediction_label = convert_to_label(model.predict(scaled)[0])
 
 # Simpan hasil ke df
+# Tambahkan hasil prediksi ke dataframe utama
 df.at[raw_last_row.name, 'Prediksi Kebakaran'] = prediction_label
 last_row = df.loc[raw_last_row.name]
 
+# Ambil waktu prediksi
+waktu = pd.to_datetime(last_row['Waktu'])
+hari = convert_day_to_indonesian(waktu.strftime('%A'))
+bulan = convert_month_to_indonesian(waktu.strftime('%B'))
+tanggal = waktu.strftime(f'%d {bulan} %Y')
+font, bg = risk_styles.get(prediction_label, ("black", "white"))
 
-
-    
-    waktu = pd.to_datetime(last_row['Waktu'])
-    hari = convert_day_to_indonesian(waktu.strftime('%A'))
-    bulan = convert_month_to_indonesian(waktu.strftime('%B'))
-    tanggal = waktu.strftime(f'%d {bulan} %Y')
-    risk_label = last_row['Prediksi Kebakaran']
-    font, bg = risk_styles.get(risk_label, ("black", "white"))
 
     # === TAMPILKAN TABEL SENSOR TERBARU ===
     sensor_df = pd.DataFrame({
