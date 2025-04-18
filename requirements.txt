@@ -4,3 +4,4 @@ joblib
 scikit-learn
 xgboost
 streamlit-autorefresh
+pip install --upgrade scikit-learn==1.5.1
