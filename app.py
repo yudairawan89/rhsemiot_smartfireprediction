@@ -256,7 +256,7 @@ if st.session_state.manual_result:
 # === FOOTER ===
 st.markdown("<br><hr>", unsafe_allow_html=True)
 
-col1, col2, col3 = st.columns([2.5, 6, 2.5])
+col1, col2, col3 = st.columns([3, 6, 2])  # perbesar col1 agar logo kiri lebih ke kanan
 
 with col1:
     st.image("logo.png", width=140)  # Logo kiri (Smart Fire)
@@ -271,6 +271,7 @@ with col2:
 
 with col3:
     st.image("upi.png", width=190)  # Logo kanan (UPI)
+
 
 
 
