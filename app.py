@@ -257,10 +257,10 @@ if st.session_state.manual_result:
 
 # === FOOTER ===
 st.markdown("<br><hr>", unsafe_allow_html=True)
-col_logo1, col_text, col_logo2 = st.columns([3.5, 5, 3.5])  # Update agar logo kiri lebih ke tengah
+col_logo1, col_text, col_logo2 = st.columns([3.7, 4.6, 3.7])  # Perbaikan proporsi agar logo kiri lebih ke tengah
 
 with col_logo1:
-    st.image("logo.png", width=130)  # Smart Fire
+    st.image("logo.png", width=130)  # Smart Fire Logo
 
 with col_text:
     st.markdown("""
@@ -271,7 +271,8 @@ with col_text:
     """, unsafe_allow_html=True)
 
 with col_logo2:
-    st.image("upi.png", width=190)  # UPI
+    st.image("upi.png", width=190)  # UPI Logo
+
 
 
 
