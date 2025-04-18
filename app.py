@@ -73,8 +73,16 @@ with col1:
     st.image("logo.png", width=90)
 with col2:
     st.markdown("<h2 style='margin-bottom:0;'>Smart Fire Prediction RHSEM – IoT Model</h2>", unsafe_allow_html=True)
-    st.caption("Sistem Prediksi Tingkat Resiko Kebakaran Hutan dan Lahan menggunakan model Hybrid Machine & Deep Learning. "
-               "Data diambil dari IoT secara Realtime via Google Sheets.")
+    col_deskripsi, col_btn = st.columns([8, 2])
+    with col_deskripsi:
+        st.caption("Sistem Prediksi Tingkat Resiko Kebakaran Hutan dan Lahan menggunakan model Hybrid Machine & Deep Learning. Data diambil dari IoT secara Realtime via Google Sheets.")
+    with col_btn:
+        st.markdown(
+            "<a href='https://docs.google.com/spreadsheets/d/1ZscUJ6SLPIF33t8ikVHUmR68b-y3Q9_r_p9d2rDRMCM/edit?gid=0#gid=0' target='_blank'>"
+            "<button style='padding: 6px 16px; background-color: #1f77b4; color: white; border: none; border-radius: 4px; cursor: pointer;'>Data Cloud</button>"
+            "</a>",
+            unsafe_allow_html=True
+        )
 
 # === PREDIKSI REALTIME ===
 st.markdown("<div class='section-title'>Hasil Prediksi Data Realtime</div>", unsafe_allow_html=True)
