@@ -83,7 +83,7 @@ st.markdown("<hr style='margin-top: 5px; margin-bottom: 20px;'>", unsafe_allow_h
 # === HEADER ===
 col1, col2 = st.columns([1, 9])
 with col1:
-    st.image("logo.png", width=190)
+    st.image("logo.png", width=170)
 with col2:
     st.markdown("""
         <div style='margin-left: 20px;'>
