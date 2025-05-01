@@ -77,10 +77,12 @@ st.cache_data.clear()
 df = load_data()
 
 # === HEADER ===
-col1, col2 = st.columns([9, 1])  
+col1, col2 = st.columns([1, 9])
 with col1:
+    st.image("logo.png", width=170)
+with col2:
     st.markdown("""
-        <div style='margin-left: 10px;'>
+        <div style='margin-left: 20px;'>
             <h2 style='margin-bottom: 0px;'>Smart Fire Prediction RHSEM - IoT Model</h2>
             <p style='font-size: 16px; line-height: 1.5; margin-top: 8px;'>
                 Sistem ini menggunakan Rotational Hybrid Stacking Ensemble Method (RHSEM) untuk memprediksi risiko kebakaran hutan secara real-time dengan tingkat akurasi tinggi.
@@ -90,20 +92,16 @@ with col1:
         </div>
     """, unsafe_allow_html=True)
 
-with col2:
-    st.markdown(
-        """
-        <div style='text-align: right; margin-top: 30px;'>
+    col_btn = st.columns([10, 1])[1]
+    with col_btn:
+        st.markdown(
+            """
             <a href='https://docs.google.com/spreadsheets/d/1ZscUJ6SLPIF33t8ikVHUmR68b-y3Q9_r_p9d2rDRMCM/edit?gid=0#gid=0' target='_blank'>
-                <button style='padding: 8px 16px; background-color: #1f77b4; color: white; 
-                                border: none; border-radius: 5px; cursor: pointer; font-size: 14px;'>
-                    Data Cloud
-                </button>
+            <button style='padding: 6px 16px; background-color: #1f77b4; color: white; border: none; border-radius: 4px; cursor: pointer;'>Data Cloud</button>
             </a>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+            """,
+            unsafe_allow_html=True
+        )
 
 st.markdown("<hr style='margin-top: 10px; margin-bottom: 25px;'>", unsafe_allow_html=True)
 
@@ -349,6 +347,3 @@ st.markdown("""
     <p style='margin: 0; font-size: 13px; line-height: 1.2;'>Dikembangkan oleh Mahasiswa Universitas Putera Indonesia YPTK Padang Tahun 2025</p>
 </div>
 """, unsafe_allow_html=True)
-
-
-
