@@ -4,9 +4,11 @@ import joblib
 from streamlit_autorefresh import st_autorefresh
 from datetime import datetime
 from io import BytesIO
+from streamlit_folium import folium_static
+import folium
 
 # === PAGE CONFIG ===
-st.set_page_config(page_title="Smart Fire Prediction RHSEM – IoT", layout="wide")
+st.set_page_config(page_title="Smart Fire Prediction RHSEM - IoT", layout="wide")
 
 # === AUTO REFRESH ===
 st_autorefresh(interval=3000, key="data_refresh")
@@ -74,12 +76,6 @@ def load_data():
 st.cache_data.clear()
 df = load_data()
 
-
-# Tambahkan garis horizontal di atas header
-st.markdown("<hr style='margin-top: 5px; margin-bottom: 20px;'>", unsafe_allow_html=True)
-
-
-# === HEADER ===
 # === HEADER ===
 col1, col2 = st.columns([1, 9])
 with col1:
@@ -87,7 +83,7 @@ with col1:
 with col2:
     st.markdown("""
         <div style='margin-left: 20px;'>
-            <h2 style='margin-bottom: 0px;'>Smart Fire Prediction RHSEM – IoT Model</h2>
+            <h2 style='margin-bottom: 0px;'>Smart Fire Prediction RHSEM - IoT Model</h2>
             <p style='font-size: 16px; line-height: 1.5; margin-top: 8px;'>
                 Sistem ini menggunakan Rotational Hybrid Stacking Ensemble Method (RHSEM) untuk memprediksi risiko kebakaran hutan secara real-time dengan tingkat akurasi tinggi.
                 Model prediksi dikembangkan dari kombinasi berbagai algoritma pembelajaran mesin yang dioptimalkan menggunakan optimasi hyperparameter untuk meningkatkan performa klasifikasi.
@@ -96,19 +92,18 @@ with col2:
         </div>
     """, unsafe_allow_html=True)
 
-    col_btn = st.columns([10, 1])[1]  # Geser tombol ke kanan
+    col_btn = st.columns([10, 1])[1]
     with col_btn:
         st.markdown(
-            "<a href='https://docs.google.com/spreadsheets/d/1ZscUJ6SLPIF33t8ikVHUmR68b-y3Q9_r_p9d2rDRMCM/edit?gid=0#gid=0' target='_blank'>"
-            "<button style='padding: 6px 16px; background-color: #1f77b4; color: white; border: none; border-radius: 4px; cursor: pointer;'>Data Cloud</button>"
-            "</a>",
+            """
+            <a href='https://docs.google.com/spreadsheets/d/1ZscUJ6SLPIF33t8ikVHUmR68b-y3Q9_r_p9d2rDRMCM/edit?gid=0#gid=0' target='_blank'>
+            <button style='padding: 6px 16px; background-color: #1f77b4; color: white; border: none; border-radius: 4px; cursor: pointer;'>Data Cloud</button>
+            </a>
+            """,
             unsafe_allow_html=True
         )
 
-
-# Tambahkan garis horizontal di bawah header
 st.markdown("<hr style='margin-top: 10px; margin-bottom: 25px;'>", unsafe_allow_html=True)
-
 
 # === PREDIKSI REALTIME ===
 st.markdown("<div class='section-title'>Hasil Prediksi Data Realtime</div>", unsafe_allow_html=True)
@@ -131,7 +126,6 @@ if df is not None and not df.empty:
         'Kelembaban Permukaan Tanah'
     ]
 
-    # Prediksi semua data
     clean_df = df[fitur].copy()
     for col in fitur:
         clean_df[col] = clean_df[col].astype(str).str.replace(',', '.').astype(float).fillna(0)
@@ -148,63 +142,63 @@ if df is not None and not df.empty:
     risk_label = last_row["Prediksi Kebakaran"]
     font, bg = risk_styles.get(risk_label, ("black", "white"))
 
-    # TABEL SENSOR
     sensor_df = pd.DataFrame({
         "Variabel": fitur,
         "Value": [f"{last_row[col]:.1f}" for col in fitur]
     })
-col_kiri, col_kanan = st.columns([1.2, 1.8])
 
-with col_kiri:
-    st.markdown("**Data Sensor Realtime:**")
-    sensor_html = "<table style='width: 100%; border-collapse: collapse;'>"
-    sensor_html += "<thead><tr><th style='text-align:left;'>Variabel</th><th style='text-align:left;'>Value</th></tr></thead><tbody>"
-    for i in range(len(sensor_df)):
-        var = sensor_df.iloc[i, 0]
-        val = sensor_df.iloc[i, 1]
-        sensor_html += f"<tr><td style='text-align:left; padding: 6px 10px;'>{var}</td><td style='text-align:left; padding: 6px 10px;'>{val}</td></tr>"
-    sensor_html += "</tbody></table>"
-    st.markdown(sensor_html, unsafe_allow_html=True)
+    col_kiri, col_kanan = st.columns([1.2, 1.8])
 
-# KOTAK PREDIKSI
-    st.markdown(
-        f"<p style='background-color:{bg}; color:{font}; padding:10px; border-radius:8px; font-weight:bold;'>"
-        f"Pada hari {hari}, tanggal {tanggal}, lahan ini diprediksi memiliki tingkat resiko kebakaran: "
-        f"<span style='text-decoration: underline; font-size: 22px;'>{risk_label}</span></p>",
-        unsafe_allow_html=True
-    )
+    with col_kiri:
+        st.markdown("**Data Sensor Realtime:**")
+        sensor_html = "<table style='width: 100%; border-collapse: collapse;'>"
+        sensor_html += "<thead><tr><th style='text-align:left;'>Variabel</th><th style='text-align:left;'>Value</th></tr></thead><tbody>"
+        for i in range(len(sensor_df)):
+            var = sensor_df.iloc[i, 0]
+            val = sensor_df.iloc[i, 1]
+            sensor_html += f"<tr><td style='text-align:left; padding: 6px 10px;'>{var}</td><td style='text-align:left; padding: 6px 10px;'>{val}</td></tr>"
+        sensor_html += "</tbody></table>"
+        st.markdown(sensor_html, unsafe_allow_html=True)
 
+        st.markdown(
+            f"<p style='background-color:{bg}; color:{font}; padding:10px; border-radius:8px; font-weight:bold;'>"
+            f"Pada hari {hari}, tanggal {tanggal}, lahan ini diprediksi memiliki tingkat resiko kebakaran: "
+            f"<span style='text-decoration: underline; font-size: 22px;'>{risk_label}</span></p>",
+            unsafe_allow_html=True
+        )
 
-with col_kanan:
-    # Tampilkan peta di kolom kanan
-    from streamlit_folium import folium_static
-    import folium
+    with col_kanan:
+        st.markdown("**Visualisasi Peta Lokasi Prediksi Kebakaran**")
 
-    st.markdown("**Visualisasi Peta Lokasi Prediksi Kebakaran**")
+        pekanbaru_coords = [-0.5071, 101.4478]
+        color_map = {"Low": "blue", "Moderate": "green", "High": "orange", "Very High": "red"}
+        marker_color = color_map.get(risk_label, "gray")
 
-    pekanbaru_coords = [-0.5071, 101.4478]
-    color_map = {"Low": "blue", "Moderate": "green", "High": "orange", "Very High": "red"}
-    pred_label = last_row["Prediksi Kebakaran"]
-    marker_color = color_map.get(pred_label, "gray")
+        popup_text = folium.Popup(f"""
+            <div style='width: 230px; font-size: 13px; line-height: 1.5;'>
+            <b>Prediksi:</b> {risk_label}<br>
+            <b>Suhu:</b> {last_row[fitur[0]]} °C<br>
+            <b>Kelembapan:</b> {last_row[fitur[1]]} %<br>
+            <b>Curah Hujan:</b> {last_row[fitur[2]]} mm<br>
+            <b>Kecepatan Angin:</b> {last_row[fitur[3]]} m/s<br>
+            <b>Kelembaban Tanah:</b> {last_row[fitur[4]]} %<br>
+            <b>Waktu:</b> {last_row['Waktu']}
+            </div>
+        """, max_width=250)
 
-    popup_text = folium.Popup(f"""
-        <div style='width: 230px; font-size: 13px; line-height: 1.5;'>
-        <b>Prediksi:</b> {pred_label}<br>
-        <b>Suhu:</b> {last_row[fitur[0]]} °C<br>
-        <b>Kelembapan:</b> {last_row[fitur[1]]} %<br>
-        <b>Curah Hujan:</b> {last_row[fitur[2]]} mm<br>
-        <b>Kecepatan Angin:</b> {last_row[fitur[3]]} m/s<br>
-        <b>Kelembaban Tanah:</b> {last_row[fitur[4]]} %<br>
-        <b>Waktu:</b> {last_row['Waktu']}
-        </div>
-    """, max_width=250)
+        m = folium.Map(location=pekanbaru_coords, zoom_start=11)
+        folium.Circle(
+            location=pekanbaru_coords,
+            radius=3000,
+            color=marker_color,
+            fill=True,
+            fill_color=marker_color,
+            fill_opacity=0.3
+        ).add_to(m)
+        folium.Marker(location=pekanbaru_coords, popup=popup_text,
+                      icon=folium.Icon(color=marker_color, icon="info-sign")).add_to(m)
 
-    m = folium.Map(location=pekanbaru_coords, zoom_start=11)
-    folium.Marker(location=pekanbaru_coords, popup=popup_text,
-                  icon=folium.Icon(color=marker_color, icon="info-sign")).add_to(m)
-    folium_static(m, width=450, height=340)
-
-
+        folium_static(m, width=450, height=340)
     
 
 # === TABEL TINGKAT RISIKO ===
