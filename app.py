@@ -9,7 +9,7 @@ import folium
 from streamlit_folium import folium_static
 
 # === PAGE CONFIG (HANYA SEKALI SAJA) ===
-st.set_page_config(page_title="Smart Fire Prediction RHSEM – IoT", layout="wide")
+st.set_page_config(page_title="Smart Fire Prediction RHSEM - IoT", layout="wide")
 
 # === AUTO REFRESH ===
 st_autorefresh(interval=3000, key="data_refresh")
@@ -85,7 +85,7 @@ with col1:
 with col2:
     st.markdown("""
         <div style='margin-left: 20px;'>
-            <h2 style='margin-bottom: 0px;'>Smart Fire Prediction RHSEM – IoT Model</h2>
+            <h2 style='margin-bottom: 0px;'>Smart Fire Prediction RHSEM - IoT Model</h2>
             <p style='font-size: 16px; line-height: 1.5; margin-top: 8px;'>
                 Sistem ini menggunakan Rotational Hybrid Stacking Ensemble Method (RHSEM) untuk memprediksi risiko kebakaran hutan secara real-time dengan tingkat akurasi tinggi.
                 Data pengujian berasal dari perangkat IoT yang mengukur parameter lingkungan seperti suhu, kelembapan, curah hujan, kecepatan angin, dan kelembapan tanah.
@@ -204,7 +204,7 @@ st.download_button("📥 Download Hasil Prediksi Kebakaran sebagai XLSX", xlsx_d
 st.markdown("<br><hr>", unsafe_allow_html=True)
 st.markdown("""
 <div style='margin-top: 20px; background-color: black; padding: 10px 20px; border-radius: 10px; text-align: center; color: white;'>
-    <p style='margin: 0; font-size: 30px; font-weight: bold;'>Smart Fire Prediction RHSEM – IoT Model</p>
+    <p style='margin: 0; font-size: 30px; font-weight: bold;'>Smart Fire Prediction RHSEM - IoT Model</p>
     <p style='margin: 0; font-size: 13px;'>Dikembangkan oleh Mahasiswa Universitas Putera Indonesia YPTK Padang Tahun 2025</p>
 </div>
 """, unsafe_allow_html=True)
