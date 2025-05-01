@@ -235,48 +235,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-# === Bagian Visualisasi Peta Lokasi Pekanbaru ===
 
-from streamlit_folium import folium_static
-import folium
-
-st.markdown("<div class='section-title'>Visualisasi Peta Lokasi Prediksi Kebakaran</div>", unsafe_allow_html=True)
-
-# Koordinat Pekanbaru
-pekanbaru_coords = [-0.5071, 101.4478]
-
-# Tentukan warna berdasarkan label risiko
-color_map = {
-    "Low": "blue",
-    "Moderate": "green",
-    "High": "orange",
-    "Very High": "red"
-}
-pred_label = last_row["Prediksi Kebakaran"]
-marker_color = color_map.get(pred_label, "gray")
-
-# Popup data sensor
-popup_text = folium.Popup(f"""
-    <div style='width: 230px; font-size: 13px; line-height: 1.5;'>
-    <b>Prediksi:</b> {pred_label}<br>
-    <b>Suhu:</b> {last_row[fitur[0]]} °C<br>
-    <b>Kelembapan:</b> {last_row[fitur[1]]} %<br>
-    <b>Curah Hujan:</b> {last_row[fitur[2]]} mm<br>
-    <b>Kecepatan Angin:</b> {last_row[fitur[3]]} m/s<br>
-    <b>Kelembaban Tanah:</b> {last_row[fitur[4]]} %<br>
-    <b>Waktu:</b> {last_row['Waktu']}
-    </div>
-    """, max_width=250)
-
-# Tampilkan peta
-m = folium.Map(location=pekanbaru_coords, zoom_start=11)
-folium.Marker(
-    location=pekanbaru_coords,
-    popup=popup_text,
-    icon=folium.Icon(color=marker_color, icon="info-sign")
-).add_to(m)
-
-folium_static(m, width=850, height=500)
 
 
 # === TABEL DATA SENSOR ===
