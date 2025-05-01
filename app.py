@@ -94,14 +94,16 @@ with col2:
 
     col_btn = st.columns([10, 1])[1]
     with col_btn:
-        st.markdown(
-            """
-            <a href='https://docs.google.com/spreadsheets/d/1ZscUJ6SLPIF33t8ikVHUmR68b-y3Q9_r_p9d2rDRMCM/edit?gid=0#gid=0' target='_blank'>
+st.markdown(
+    """
+    <div style='text-align: right; margin-top: -40px; margin-bottom: 10px;'>
+        <a href='https://docs.google.com/spreadsheets/d/1ZscUJ6SLPIF33t8ikVHUmR68b-y3Q9_r_p9d2rDRMCM/edit?gid=0#gid=0' target='_blank'>
             <button style='padding: 6px 16px; background-color: #1f77b4; color: white; border: none; border-radius: 4px; cursor: pointer;'>Data Cloud</button>
-            </a>
-            """,
-            unsafe_allow_html=True
-        )
+        </a>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 st.markdown("<hr style='margin-top: 10px; margin-bottom: 25px;'>", unsafe_allow_html=True)
 
