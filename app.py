@@ -79,7 +79,7 @@ df = load_data()
 st.markdown("<hr style='margin-top: 5px; margin-bottom: 20px;'>", unsafe_allow_html=True)
 
 
-# === HEADER ===
+
 # === HEADER ===
 col1, col2 = st.columns([1, 9])
 with col1:
@@ -167,42 +167,66 @@ if df is not None and not df.empty:
 
 from streamlit_folium import st_folium
 import folium
+from streamlit_folium import folium_static
 
 # === KOORDINAT PEKANBARU ===
-pekanbaru_coords = [-0.5071, 101.4478]  # latitude, longitude
+# === LOAD DATA SENSOR DARI GOOGLE SHEETS ===
+@st.cache_data(ttl=10)
+def load_data():
+    url = "https://docs.google.com/spreadsheets/d/1ZscUJ6SLPIF33t8ikVHUmR68b-y3Q9_r_p9d2rDRMCM/export?format=csv"
+    df = pd.read_csv(url)
+    return df
 
-# Ambil data terakhir
-latest_data = df.iloc[-1]
-popup_text = f"""
-<b>Prediksi:</b> {latest_data['Prediksi Kebakaran']}<br>
-<b>Suhu:</b> {latest_data[fitur[0]]} °C<br>
-<b>Kelembapan:</b> {latest_data[fitur[1]]} %<br>
-<b>Curah Hujan:</b> {latest_data[fitur[2]]} mm<br>
-<b>Kecepatan Angin:</b> {latest_data[fitur[3]]} m/s<br>
-<b>Kelembaban Tanah:</b> {latest_data[fitur[4]]} %<br>
-<b>Waktu:</b> {latest_data['Waktu']}
-"""
+# === CONFIG PAGE ===
+st.set_page_config(page_title="Peta Prediksi Kebakaran", layout="wide")
+st.title("📍 Visualisasi Lokasi Prediksi Kebakaran – RHSEM-IoT")
 
-# WARNA MARKER BERDASARKAN RISIKO
-risk_color_map = {
-    "Low": "blue",
-    "Moderate": "green",
-    "High": "orange",
-    "Very High": "red"
-}
-marker_color = risk_color_map.get(latest_data['Prediksi Kebakaran'], "gray")
+# === AMBIL DATA TERBARU ===
+df = load_data()
+fitur = ['Suhu Udara', 'Kelembapan Udara', 'Curah Hujan/Jam', 'Kecepatan Angin (ms)', 'Kelembapan Tanah']
+if not df.empty:
+    latest_data = df.iloc[-1]
 
-# === MAP OBJECT ===
-m = folium.Map(location=pekanbaru_coords, zoom_start=11)
-folium.Marker(
-    location=pekanbaru_coords,
-    popup=popup_text,
-    icon=folium.Icon(color=marker_color)
-).add_to(m)
+    # === LOKASI PEKANBARU ===
+    pekanbaru_coords = [-0.5071, 101.4478]
 
-# === TAMPILKAN PETA DI STREAMLIT ===
-st.markdown("<div class='section-title'>Peta Prediksi Lokasi (Realtime)</div>", unsafe_allow_html=True)
-st_data = st_folium(m, width=800, height=400)
+    # === TAMPILKAN PETA ===
+    m = folium.Map(location=pekanbaru_coords, zoom_start=10)
+
+    # === WARNA PIN BERDASARKAN PREDIKSI ===
+    color_map = {
+        "Low": "blue",
+        "Moderate": "green",
+        "High": "orange",
+        "Very High": "red"
+    }
+    pred_label = latest_data.get("Prediksi Kebakaran", "Low")
+    marker_color = color_map.get(pred_label, "blue")
+
+    # === POPUP TEXT HTML ===
+    popup_text = folium.Popup(f"""
+    <div style='width: 230px; font-size: 13px; line-height: 1.5;'>
+    <b>Prediksi:</b> {pred_label}<br>
+    <b>Suhu:</b> {latest_data[fitur[0]]} °C<br>
+    <b>Kelembapan:</b> {latest_data[fitur[1]]} %<br>
+    <b>Curah Hujan:</b> {latest_data[fitur[2]]} mm<br>
+    <b>Kecepatan Angin:</b> {latest_data[fitur[3]]} m/s<br>
+    <b>Kelembaban Tanah:</b> {latest_data[fitur[4]]} %<br>
+    <b>Waktu:</b> {latest_data['Waktu']}
+    </div>
+    """, max_width=250)
+
+    # === TAMBAHKAN MARKER KE PETA ===
+    folium.Marker(
+        location=pekanbaru_coords,
+        popup=popup_text,
+        icon=folium.Icon(color=marker_color, icon="info-sign")
+    ).add_to(m)
+
+    # === TAMPILKAN DI STREAMLIT ===
+    folium_static(m, width=850, height=500)
+else:
+    st.warning("Data sensor belum tersedia atau gagal dimuat.")
 
 
 
