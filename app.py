@@ -92,7 +92,16 @@ with col2:
         </div>
     """, unsafe_allow_html=True)
 
-
+    col_btn = st.columns([10, 1])[1]
+    with col_btn:
+        st.markdown(
+            """
+            <a href='https://docs.google.com/spreadsheets/d/1ZscUJ6SLPIF33t8ikVHUmR68b-y3Q9_r_p9d2rDRMCM/edit?gid=0#gid=0' target='_blank'>
+            <button style='padding: 6px 16px; background-color: #1f77b4; color: white; border: none; border-radius: 4px; cursor: pointer;'>Data Cloud</button>
+            </a>
+            """,
+            unsafe_allow_html=True
+        )
 
 st.markdown("<hr style='margin-top: 10px; margin-bottom: 25px;'>", unsafe_allow_html=True)
 
@@ -231,25 +240,7 @@ st.markdown("<div class='section-title' style='margin-top: 30px;'>Data Sensor Le
 st.dataframe(df[['Waktu'] + fitur + ['Prediksi Kebakaran']], use_container_width=True)
 
 
-col_download, col_cloud = st.columns([3, 1])
 
-with col_download:
-    st.download_button(
-        label="📥 Download Hasil Prediksi Kebakaran sebagai XLSX",
-        data=xlsx_data,
-        file_name='hasil_prediksi_kebakaran.xlsx',
-        mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    )
-
-with col_cloud:
-    st.markdown(
-        """
-        <a href='https://docs.google.com/spreadsheets/d/1ZscUJ6SLPIF33t8ikVHUmR68b-y3Q9_r_p9d2rDRMCM/edit?gid=0#gid=0' target='_blank'>
-        <button style='padding: 6px 16px; background-color: #1f77b4; color: white; border: none; border-radius: 4px; cursor: pointer;'>Data Cloud</button>
-        </a>
-        """,
-        unsafe_allow_html=True
-    )
 
 # === EXPORT TO XLSX ===
 output = BytesIO()
