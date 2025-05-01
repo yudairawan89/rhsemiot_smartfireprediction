@@ -164,6 +164,49 @@ if df is not None and not df.empty:
         unsafe_allow_html=True
     )
 
+
+from streamlit_folium import st_folium
+import folium
+
+# === KOORDINAT PEKANBARU ===
+pekanbaru_coords = [-0.5071, 101.4478]  # latitude, longitude
+
+# Ambil data terakhir
+latest_data = df.iloc[-1]
+popup_text = f"""
+<b>Prediksi:</b> {latest_data['Prediksi Kebakaran']}<br>
+<b>Suhu:</b> {latest_data[fitur[0]]} °C<br>
+<b>Kelembapan:</b> {latest_data[fitur[1]]} %<br>
+<b>Curah Hujan:</b> {latest_data[fitur[2]]} mm<br>
+<b>Kecepatan Angin:</b> {latest_data[fitur[3]]} m/s<br>
+<b>Kelembaban Tanah:</b> {latest_data[fitur[4]]} %<br>
+<b>Waktu:</b> {latest_data['Waktu']}
+"""
+
+# WARNA MARKER BERDASARKAN RISIKO
+risk_color_map = {
+    "Low": "blue",
+    "Moderate": "green",
+    "High": "orange",
+    "Very High": "red"
+}
+marker_color = risk_color_map.get(latest_data['Prediksi Kebakaran'], "gray")
+
+# === MAP OBJECT ===
+m = folium.Map(location=pekanbaru_coords, zoom_start=11)
+folium.Marker(
+    location=pekanbaru_coords,
+    popup=popup_text,
+    icon=folium.Icon(color=marker_color)
+).add_to(m)
+
+# === TAMPILKAN PETA DI STREAMLIT ===
+st.markdown("<div class='section-title'>Peta Prediksi Lokasi (Realtime)</div>", unsafe_allow_html=True)
+st_data = st_folium(m, width=800, height=400)
+
+
+
+
 # === TABEL TINGKAT RISIKO ===
 st.markdown("<div class='section-title'>Tabel Tingkat Resiko dan Intensitas Kebakaran</div>", unsafe_allow_html=True)
 st.markdown("""
@@ -291,41 +334,6 @@ if st.session_state.manual_result:
         unsafe_allow_html=True
     )
 
-# === PETA LOKASI ALAT ===
-from streamlit_folium import st_folium
-import folium
-
-st.markdown("<div class='section-title'>Peta Lokasi Sensor & Prediksi Kebakaran</div>", unsafe_allow_html=True)
-
-# Contoh koordinat dan hasil prediksi (disesuaikan dengan alat di lapangan)
-lokasi_sensor = [
-    {"nama": "Sensor Ujung Batu", "lat": 0.7186, "lon": 101.0022, "pred": "High"},
-    {"nama": "Sensor Panam", "lat": 0.4667, "lon": 101.3667, "pred": "Moderate"},
-    {"nama": "Sensor Dumai", "lat": 1.6674, "lon": 101.4505, "pred": "Very High"},
-    {"nama": "Sensor Kampar", "lat": 0.2923, "lon": 100.9756, "pred": "Low"},
-]
-
-color_map = {
-    "Low": "blue",
-    "Moderate": "green",
-    "High": "orange",
-    "Very High": "red"
-}
-
-# Inisialisasi Peta
-map_center = [0.5, 101.3]
-m = folium.Map(location=map_center, zoom_start=7)
-
-# Tambahkan marker untuk tiap sensor
-for lokasi in lokasi_sensor:
-    folium.Marker(
-        location=[lokasi["lat"], lokasi["lon"]],
-        popup=f"<b>{lokasi['nama']}</b><br>Prediksi: {lokasi['pred']}",
-        icon=folium.Icon(color=color_map.get(lokasi["pred"], "gray"))
-    ).add_to(m)
-
-# Tampilkan peta di Streamlit
-st_data = st_folium(m, width=700, height=450)
 
 
 # === FOOTER ===
