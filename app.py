@@ -171,7 +171,7 @@ with col_kanan:
     from streamlit_folium import folium_static
     import folium
 
-    st.markdown("**Peta Lokasi Sensor (Pekanbaru)**")
+    st.markdown("**Visualisasi Peta Lokasi Prediksi Kebakaran**")
 
     pekanbaru_coords = [-0.5071, 101.4478]
     color_map = {"Low": "blue", "Moderate": "green", "High": "orange", "Very High": "red"}
