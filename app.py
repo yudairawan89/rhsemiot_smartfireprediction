@@ -153,8 +153,48 @@ if df is not None and not df.empty:
         "Variabel": fitur,
         "Value": [f"{last_row[col]:.1f}" for col in fitur]
     })
-    st.write("Data Sensor Realtime:")
-    st.table(sensor_df)
+col_kiri, col_kanan = st.columns([1.2, 1.8])
+
+with col_kiri:
+    st.markdown("**Data Sensor Realtime:**")
+    sensor_html = "<table style='width: 100%; border-collapse: collapse;'>"
+    sensor_html += "<thead><tr><th style='text-align:left;'>Variabel</th><th style='text-align:left;'>Value</th></tr></thead><tbody>"
+    for i in range(len(sensor_df)):
+        var = sensor_df.iloc[i, 0]
+        val = sensor_df.iloc[i, 1]
+        sensor_html += f"<tr><td style='text-align:left; padding: 6px 10px;'>{var}</td><td style='text-align:left; padding: 6px 10px;'>{val}</td></tr>"
+    sensor_html += "</tbody></table>"
+    st.markdown(sensor_html, unsafe_allow_html=True)
+
+with col_kanan:
+    # Tampilkan peta di kolom kanan
+    from streamlit_folium import folium_static
+    import folium
+
+    st.markdown("**Peta Lokasi Sensor (Pekanbaru)**")
+
+    pekanbaru_coords = [-0.5071, 101.4478]
+    color_map = {"Low": "blue", "Moderate": "green", "High": "orange", "Very High": "red"}
+    pred_label = last_row["Prediksi Kebakaran"]
+    marker_color = color_map.get(pred_label, "gray")
+
+    popup_text = folium.Popup(f"""
+        <div style='width: 230px; font-size: 13px; line-height: 1.5;'>
+        <b>Prediksi:</b> {pred_label}<br>
+        <b>Suhu:</b> {last_row[fitur[0]]} °C<br>
+        <b>Kelembapan:</b> {last_row[fitur[1]]} %<br>
+        <b>Curah Hujan:</b> {last_row[fitur[2]]} mm<br>
+        <b>Kecepatan Angin:</b> {last_row[fitur[3]]} m/s<br>
+        <b>Kelembaban Tanah:</b> {last_row[fitur[4]]} %<br>
+        <b>Waktu:</b> {last_row['Waktu']}
+        </div>
+    """, max_width=250)
+
+    m = folium.Map(location=pekanbaru_coords, zoom_start=11)
+    folium.Marker(location=pekanbaru_coords, popup=popup_text,
+                  icon=folium.Icon(color=marker_color, icon="info-sign")).add_to(m)
+    folium_static(m, width=450, height=340)
+
 
     # KOTAK PREDIKSI
     st.markdown(
