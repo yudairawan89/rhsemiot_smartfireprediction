@@ -180,6 +180,7 @@ with col_kanan:
     from streamlit_folium import folium_static
     import folium
 
+   with col_kanan:
     st.markdown("**Visualisasi Peta Lokasi Prediksi Kebakaran**")
 
     pekanbaru_coords = [-0.5071, 101.4478]
@@ -187,6 +188,7 @@ with col_kanan:
     pred_label = last_row["Prediksi Kebakaran"]
     marker_color = color_map.get(pred_label, "gray")
 
+    # === POPUP HTML ===
     popup_text = folium.Popup(f"""
         <div style='width: 230px; font-size: 13px; line-height: 1.5;'>
         <b>Prediksi:</b> {pred_label}<br>
@@ -199,10 +201,28 @@ with col_kanan:
         </div>
     """, max_width=250)
 
+    # === PETAKAN AREA DENGAN CIRCLE DAN WARNA RISIKO ===
     m = folium.Map(location=pekanbaru_coords, zoom_start=11)
-    folium.Marker(location=pekanbaru_coords, popup=popup_text,
-                  icon=folium.Icon(color=marker_color, icon="info-sign")).add_to(m)
+    
+    # Area berwarna berdasarkan prediksi
+    folium.Circle(
+        location=pekanbaru_coords,
+        radius=3000,  # dalam meter
+        color=marker_color,
+        fill=True,
+        fill_color=marker_color,
+        fill_opacity=0.3
+    ).add_to(m)
+
+    # Marker lokasi
+    folium.Marker(
+        location=pekanbaru_coords,
+        popup=popup_text,
+        icon=folium.Icon(color=marker_color, icon="info-sign")
+    ).add_to(m)
+
     folium_static(m, width=450, height=340)
+
 
 
     
