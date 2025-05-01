@@ -77,10 +77,8 @@ st.cache_data.clear()
 df = load_data()
 
 # === HEADER ===
-col1, col2 = st.columns([1, 9])
+col1, col2 = st.columns([8, 2])  # Ubah proporsi agar tombol dan teks muat dalam satu baris
 with col1:
-    st.image("logo.png", width=170)
-with col2:
     st.markdown("""
         <div style='margin-left: 20px;'>
             <h2 style='margin-bottom: 0px;'>Smart Fire Prediction RHSEM - IoT Model</h2>
@@ -92,18 +90,20 @@ with col2:
         </div>
     """, unsafe_allow_html=True)
 
-    col_btn = st.columns([10, 1])[1]
-    with col_btn:
-st.markdown(
-    """
-    <div style='text-align: right; margin-top: -40px; margin-bottom: 10px;'>
-        <a href='https://docs.google.com/spreadsheets/d/1ZscUJ6SLPIF33t8ikVHUmR68b-y3Q9_r_p9d2rDRMCM/edit?gid=0#gid=0' target='_blank'>
-            <button style='padding: 6px 16px; background-color: #1f77b4; color: white; border: none; border-radius: 4px; cursor: pointer;'>Data Cloud</button>
-        </a>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+with col2:
+    st.markdown(
+        """
+        <div style='text-align: right; margin-top: 35px;'>
+            <a href='https://docs.google.com/spreadsheets/d/1ZscUJ6SLPIF33t8ikVHUmR68b-y3Q9_r_p9d2rDRMCM/edit?gid=0#gid=0' target='_blank'>
+                <button style='padding: 8px 18px; background-color: #1f77b4; color: white; border: none; border-radius: 5px; cursor: pointer;'>
+                    Data Cloud
+                </button>
+            </a>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
 
 st.markdown("<hr style='margin-top: 10px; margin-bottom: 25px;'>", unsafe_allow_html=True)
 
