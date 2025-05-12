@@ -198,7 +198,7 @@ with realtime:
             folium_static(m, width=450, height=340)
 
 with col_kanan:
-    st.markdown("**Tampilan Rancangan Alat IoT:**")
+    st.markdown("**IoT Smart Fire Prediction:**")
     from PIL import Image
     image = Image.open("rancangan full IoT.png")
     st.image(image.resize((200, 340)))
