@@ -14,6 +14,12 @@ st.set_page_config(page_title="Smart Fire Prediction RHSEM - IoT", layout="wide"
 realtime_refresh = st.container()
 with realtime_refresh:
     st_autorefresh(interval=3000, key="refresh_realtime")
+
+    df = load_data()  # ✅ Ditempatkan di sini, sebelum dipakai
+
+    st.markdown("<div class='section-title'>Hasil Prediksi Data Realtime</div>", unsafe_allow_html=True)
+
+    if df is not None and not df.empty:
     
     # === PREDIKSI REALTIME ===
 st.markdown("<div class='section-title'>Hasil Prediksi Data Realtime</div>", unsafe_allow_html=True)
