@@ -14,107 +14,101 @@ st.set_page_config(page_title="Smart Fire Prediction RHSEM - IoT", layout="wide"
 realtime_refresh = st.container()
 with realtime_refresh:
     st_autorefresh(interval=3000, key="refresh_realtime")
-
-    df = load_data()  # ✅ Ditempatkan di sini, sebelum dipakai
+    df = load_data()
 
     st.markdown("<div class='section-title'>Hasil Prediksi Data Realtime</div>", unsafe_allow_html=True)
 
     if df is not None and not df.empty:
-    
-    # === PREDIKSI REALTIME ===
-st.markdown("<div class='section-title'>Hasil Prediksi Data Realtime</div>", unsafe_allow_html=True)
+        df = df.rename(columns={
+            'Suhu Udara': 'Tavg: Temperatur rata-rata (°C)',
+            'Kelembapan Udara': 'RH_avg: Kelembapan rata-rata (%)',
+            'Curah Hujan/Jam': 'RR: Curah hujan (mm)',
+            'Kecepatan Angin (ms)': 'ff_avg: Kecepatan angin rata-rata (m/s)',
+            'Kelembapan Tanah': 'Kelembaban Permukaan Tanah',
+            'Waktu': 'Waktu'
+        })
 
-if df is not None and not df.empty:
-    df = df.rename(columns={
-        'Suhu Udara': 'Tavg: Temperatur rata-rata (°C)',
-        'Kelembapan Udara': 'RH_avg: Kelembapan rata-rata (%)',
-        'Curah Hujan/Jam': 'RR: Curah hujan (mm)',
-        'Kecepatan Angin (ms)': 'ff_avg: Kecepatan angin rata-rata (m/s)',
-        'Kelembapan Tanah': 'Kelembaban Permukaan Tanah',
-        'Waktu': 'Waktu'
-    })
+        fitur = [
+            'Tavg: Temperatur rata-rata (°C)',
+            'RH_avg: Kelembapan rata-rata (%)',
+            'RR: Curah hujan (mm)',
+            'ff_avg: Kecepatan angin rata-rata (m/s)',
+            'Kelembaban Permukaan Tanah'
+        ]
 
-    fitur = [
-        'Tavg: Temperatur rata-rata (°C)',
-        'RH_avg: Kelembapan rata-rata (%)',
-        'RR: Curah hujan (mm)',
-        'ff_avg: Kecepatan angin rata-rata (m/s)',
-        'Kelembaban Permukaan Tanah'
-    ]
+        clean_df = df[fitur].copy()
+        for col in fitur:
+            clean_df[col] = clean_df[col].astype(str).str.replace(',', '.').astype(float).fillna(0)
 
-    clean_df = df[fitur].copy()
-    for col in fitur:
-        clean_df[col] = clean_df[col].astype(str).str.replace(',', '.').astype(float).fillna(0)
+        scaled_all = scaler.transform(clean_df)
+        predictions = [convert_to_label(p) for p in model.predict(scaled_all)]
+        df["Prediksi Kebakaran"] = predictions
 
-    scaled_all = scaler.transform(clean_df)
-    predictions = [convert_to_label(p) for p in model.predict(scaled_all)]
-    df["Prediksi Kebakaran"] = predictions
+        last_row = df.iloc[-1]
+        waktu = pd.to_datetime(last_row['Waktu'])
+        hari = convert_day_to_indonesian(waktu.strftime('%A'))
+        bulan = convert_month_to_indonesian(waktu.strftime('%B'))
+        tanggal = waktu.strftime(f'%d {bulan} %Y')
+        risk_label = last_row["Prediksi Kebakaran"]
+        font, bg = risk_styles.get(risk_label, ("black", "white"))
 
-    last_row = df.iloc[-1]
-    waktu = pd.to_datetime(last_row['Waktu'])
-    hari = convert_day_to_indonesian(waktu.strftime('%A'))
-    bulan = convert_month_to_indonesian(waktu.strftime('%B'))
-    tanggal = waktu.strftime(f'%d {bulan} %Y')
-    risk_label = last_row["Prediksi Kebakaran"]
-    font, bg = risk_styles.get(risk_label, ("black", "white"))
+        sensor_df = pd.DataFrame({
+            "Variabel": fitur,
+            "Value": [f"{last_row[col]:.1f}" for col in fitur]
+        })
 
-    sensor_df = pd.DataFrame({
-        "Variabel": fitur,
-        "Value": [f"{last_row[col]:.1f}" for col in fitur]
-    })
+        col_kiri, col_kanan = st.columns([1.2, 1.8])
 
-    col_kiri, col_kanan = st.columns([1.2, 1.8])
+        with col_kiri:
+            st.markdown("**Data Sensor Realtime:**")
+            sensor_html = "<table style='width: 100%; border-collapse: collapse;'>"
+            sensor_html += "<thead><tr><th style='text-align:left;'>Variabel</th><th style='text-align:left;'>Value</th></tr></thead><tbody>"
+            for i in range(len(sensor_df)):
+                var = sensor_df.iloc[i, 0]
+                val = sensor_df.iloc[i, 1]
+                sensor_html += f"<tr><td style='text-align:left; padding: 6px 10px;'>{var}</td><td style='text-align:left; padding: 6px 10px;'>{val}</td></tr>"
+            sensor_html += "</tbody></table>"
+            st.markdown(sensor_html, unsafe_allow_html=True)
 
-    with col_kiri:
-        st.markdown("**Data Sensor Realtime:**")
-        sensor_html = "<table style='width: 100%; border-collapse: collapse;'>"
-        sensor_html += "<thead><tr><th style='text-align:left;'>Variabel</th><th style='text-align:left;'>Value</th></tr></thead><tbody>"
-        for i in range(len(sensor_df)):
-            var = sensor_df.iloc[i, 0]
-            val = sensor_df.iloc[i, 1]
-            sensor_html += f"<tr><td style='text-align:left; padding: 6px 10px;'>{var}</td><td style='text-align:left; padding: 6px 10px;'>{val}</td></tr>"
-        sensor_html += "</tbody></table>"
-        st.markdown(sensor_html, unsafe_allow_html=True)
+            st.markdown(
+                f"<p style='background-color:{bg}; color:{font}; padding:10px; border-radius:8px; font-weight:bold;'>"
+                f"Pada hari {hari}, tanggal {tanggal}, lahan ini diprediksi memiliki tingkat resiko kebakaran: "
+                f"<span style='text-decoration: underline; font-size: 22px;'>{risk_label}</span></p>",
+                unsafe_allow_html=True
+            )
 
-        st.markdown(
-            f"<p style='background-color:{bg}; color:{font}; padding:10px; border-radius:8px; font-weight:bold;'>"
-            f"Pada hari {hari}, tanggal {tanggal}, lahan ini diprediksi memiliki tingkat resiko kebakaran: "
-            f"<span style='text-decoration: underline; font-size: 22px;'>{risk_label}</span></p>",
-            unsafe_allow_html=True
-        )
+        with col_kanan:
+            st.markdown("**Visualisasi Peta Lokasi Prediksi Kebakaran**")
+            pekanbaru_coords = [-0.5071, 101.4478]
+            color_map = {"Low": "blue", "Moderate": "green", "High": "orange", "Very High": "red"}
+            marker_color = color_map.get(risk_label, "gray")
 
-    with col_kanan:
-        st.markdown("**Visualisasi Peta Lokasi Prediksi Kebakaran**")
+            popup_text = folium.Popup(f"""
+                <div style='width: 230px; font-size: 13px; line-height: 1.5;'>
+                <b>Prediksi:</b> {risk_label}<br>
+                <b>Suhu:</b> {last_row[fitur[0]]} °C<br>
+                <b>Kelembapan:</b> {last_row[fitur[1]]} %<br>
+                <b>Curah Hujan:</b> {last_row[fitur[2]]} mm<br>
+                <b>Kecepatan Angin:</b> {last_row[fitur[3]]} m/s<br>
+                <b>Kelembaban Tanah:</b> {last_row[fitur[4]]} %<br>
+                <b>Waktu:</b> {last_row['Waktu']}
+                </div>
+            """, max_width=250)
 
-        pekanbaru_coords = [-0.5071, 101.4478]
-        color_map = {"Low": "blue", "Moderate": "green", "High": "orange", "Very High": "red"}
-        marker_color = color_map.get(risk_label, "gray")
+            m = folium.Map(location=pekanbaru_coords, zoom_start=11)
+            folium.Circle(
+                location=pekanbaru_coords,
+                radius=3000,
+                color=marker_color,
+                fill=True,
+                fill_color=marker_color,
+                fill_opacity=0.3
+            ).add_to(m)
+            folium.Marker(location=pekanbaru_coords, popup=popup_text,
+                          icon=folium.Icon(color=marker_color, icon="info-sign")).add_to(m)
 
-        popup_text = folium.Popup(f"""
-            <div style='width: 230px; font-size: 13px; line-height: 1.5;'>
-            <b>Prediksi:</b> {risk_label}<br>
-            <b>Suhu:</b> {last_row[fitur[0]]} °C<br>
-            <b>Kelembapan:</b> {last_row[fitur[1]]} %<br>
-            <b>Curah Hujan:</b> {last_row[fitur[2]]} mm<br>
-            <b>Kecepatan Angin:</b> {last_row[fitur[3]]} m/s<br>
-            <b>Kelembaban Tanah:</b> {last_row[fitur[4]]} %<br>
-            <b>Waktu:</b> {last_row['Waktu']}
-            </div>
-        """, max_width=250)
+            folium_static(m, width=450, height=340)
 
-        m = folium.Map(location=pekanbaru_coords, zoom_start=11)
-        folium.Circle(
-            location=pekanbaru_coords,
-            radius=3000,
-            color=marker_color,
-            fill=True,
-            fill_color=marker_color,
-            fill_opacity=0.3
-        ).add_to(m)
-        folium.Marker(location=pekanbaru_coords, popup=popup_text,
-                      icon=folium.Icon(color=marker_color, icon="info-sign")).add_to(m)
-
-        folium_static(m, width=450, height=340)
 
 
 
