@@ -8,7 +8,7 @@ from streamlit_folium import folium_static
 import folium
 
 # === PAGE CONFIG ===
-st.set_page_config(page_title="Smart Fire Prediction RHSEM - IoT", layout="wide")
+st.set_page_config(page_title="Smart Fire Prediction RHSEM - IoT", page_icon="favicon.ico",layout="wide")
 
 # === STYLE KUSTOM ===
 st.markdown("""
