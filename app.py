@@ -329,18 +329,6 @@ if st.session_state.manual_result:
         unsafe_allow_html=True
     )
 
-# === LOAD MODEL TEXT CLASSIFIER & VECTORIZER ===
-@st.cache_resource
-def load_text_model():
-    try:
-    st.caption(f"Jumlah fitur TF-IDF: {len(vectorizer.get_feature_names_out())}")
-except Exception as e:
-    st.error(f"❌ Vectorizer error: {e}")
-    vec = joblib.load("tfidf_vectorizer.joblib")
-    model = joblib.load("stacking_text_model.joblib")
-    return vec, model
-
-vectorizer, model_text = load_text_model()
 
 # === PENGUJIAN MENGGUNAKAN DATA TEKS TIDAK TERSTRUKTUR ===
 st.markdown("<div class='section-title'>Pengujian Menggunakan Data Teks Tidak Terstruktur</div>", unsafe_allow_html=True)
@@ -359,16 +347,22 @@ btn_pred_text, btn_reset_text, _ = st.columns([1, 1, 8])
 with btn_pred_text:
     if st.button("🔍 Prediksi Teks"):
         try:
-            # vectorizer dan model_text sudah dimuat di atas pakai load_text_model()
+            import joblib
+            # Load vectorizer dan model (pastikan file sudah benar dan hasil retraining)
+            vectorizer = joblib.load("tfidf_vectorizer.joblib")
+            model_text = joblib.load("stacking_text_model.joblib")
+
+            # Transformasi dan prediksi
             X_trans = vectorizer.transform([input_text])
             pred = model_text.predict(X_trans)[0]
             label_text = convert_to_label(pred)
 
+            # Simpan hasil ke session
             st.session_state.text_input = input_text
             st.session_state.text_result = label_text
 
         except Exception as e:
-            st.error(f"Terjadi kesalahan saat memproses input: {e}")
+            st.error(f"Terjadi kesalahan saat memuat model atau memproses input: {e}")
 
 with btn_reset_text:
     if st.button("🧼 Reset Teks"):
@@ -385,8 +379,6 @@ if st.session_state.text_result:
         f"Hasil Prediksi dari Deskripsi Teks: <b>{hasil}</b></p>",
         unsafe_allow_html=True
     )
-
-
 
 
 
