@@ -331,69 +331,6 @@ if st.session_state.manual_result:
 
 
 
-# === PREDIKSI DENGAN TEKS TIDAK TERSTRUKTUR ===
-st.markdown("<div class='section-title'>Pengujian Menggunakan Data Teks</div>", unsafe_allow_html=True)
-
-if "text_input" not in st.session_state:
-    st.session_state.text_input = ""
-if "text_result" not in st.session_state:
-    st.session_state.text_result = None
-
-input_text = st.text_area("Masukkan deskripsi lingkungan (contoh: 'cuaca panas dan tanah sangat kering')",
-                          value=st.session_state.text_input, height=120)
-
-btn_pred_text, btn_reset_text, _ = st.columns([1, 1, 8])
-with btn_pred_text:
-    if st.button("🔍 Prediksi Teks"):
-        try:
-            # Load semua model teks (tanpa LightGBM)
-            from sklearn.base import clone
-            import joblib
-            import numpy as np
-
-            vectorizer = joblib.load("vectorizer.joblib")
-            meta_model = joblib.load("meta_model_LR.joblib")
-            base_models = {
-                'C4.5': joblib.load("C4.5_model.joblib"),
-                'RF': joblib.load("RF_model.joblib"),
-                'HistGB': joblib.load("HistGB_model.joblib"),
-                'MLP': joblib.load("MLP_model.joblib")
-            }
-
-            # Transform TF-IDF
-            X_input_sparse = vectorizer.transform([input_text])
-            base_outputs = []
-            for name, model in base_models.items():
-                if name in ['HistGB', 'MLP']:
-                    X_input = X_input_sparse.toarray()
-                else:
-                    X_input = X_input_sparse
-                prob = model.predict_proba(X_input)
-                base_outputs.append(prob)
-
-            X_meta_input = np.hstack(base_outputs)
-            pred_label = meta_model.predict(X_meta_input)[0]
-            st.session_state.text_result = convert_to_label(pred_label)
-            st.session_state.text_input = input_text
-
-        except Exception as e:
-            st.error(f"Gagal melakukan prediksi teks: {e}")
-
-with btn_reset_text:
-    if st.button("🧼 Reset Teks"):
-        st.session_state.text_input = ""
-        st.session_state.text_result = None
-        st.experimental_rerun()
-
-# Tampilkan hasil prediksi teks
-if st.session_state.text_result:
-    hasil = st.session_state.text_result
-    font, bg = risk_styles.get(hasil, ("black", "white"))
-    st.markdown(
-        f"<p style='color:{font}; background-color:{bg}; padding:10px; border-radius:5px;'>"
-        f"Hasil Prediksi Risiko Kebakaran dari Teks: <b>{hasil}</b></p>",
-        unsafe_allow_html=True
-    )
 
 
 
