@@ -332,6 +332,10 @@ if st.session_state.manual_result:
 # === LOAD MODEL TEXT CLASSIFIER & VECTORIZER ===
 @st.cache_resource
 def load_text_model():
+    try:
+    st.caption(f"Jumlah fitur TF-IDF: {len(vectorizer.get_feature_names_out())}")
+except Exception as e:
+    st.error(f"❌ Vectorizer error: {e}")
     vec = joblib.load("tfidf_vectorizer.joblib")
     model = joblib.load("stacking_text_model.joblib")
     return vec, model
