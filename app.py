@@ -349,8 +349,8 @@ with btn_pred_text:
         try:
             import joblib
             # Load vectorizer dan model (pastikan file sudah benar dan hasil retraining)
-            vectorizer = joblib.load("tfidf_vectorizer.joblib")
-            model_text = joblib.load("stacking_text_model.joblib")
+            vectorizer = joblib.load("tfidf_vectorizer2.joblib")
+            model_text = joblib.load("stacking_text_model2.joblib")
 
             # Transformasi dan prediksi
             X_trans = vectorizer.transform([input_text])
