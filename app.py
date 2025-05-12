@@ -102,7 +102,7 @@ st.markdown("<hr style='margin-top: 10px; margin-bottom: 25px;'>", unsafe_allow_
 # === PREDIKSI REALTIME DENGAN AUTOREFRESH ===
 realtime = st.container()
 with realtime:
-    st_autorefresh(interval=3000, key="refresh_realtime")
+    st_autorefresh(interval=7000, key="refresh_realtime")
     df = load_data()
 
     st.markdown("<div class='section-title'>Hasil Prediksi Data Realtime</div>", unsafe_allow_html=True)
