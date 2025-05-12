@@ -315,7 +315,7 @@ if st.session_state.text_result:
     font, bg = risk_styles.get(hasil, ("black", "white"))
     st.markdown(
         f"<p style='color:{font}; background-color:{bg}; padding:10px; border-radius:5px;'>"
-        f"Hasil Prediksi dari Deskripsi Teks: <b>{hasil}</b></p>", unsafe_allow_html=True
+        f"Hasil Prediksi Tingkat Risiko Kebakaran: <b>{hasil}</b></p>", unsafe_allow_html=True
     )
 
 # === FOOTER ===
