@@ -340,7 +340,7 @@ if "text_result" not in st.session_state:
     st.session_state.text_result = None
 
 # Input text dari user
-input_text = st.text_area("Masukkan deskripsi lingkungan (contoh: 'cuaca panas dan tanah sangat kering')", 
+input_text = st.text_area("Masukkan deskripsi:", 
                           value=st.session_state.text_input, height=120)
 
 btn_pred_text, btn_reset_text, _ = st.columns([1, 1, 8])
