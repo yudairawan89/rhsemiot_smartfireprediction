@@ -197,7 +197,7 @@ with realtime:
 
             folium_static(m, width=450, height=340)
 
-    with col_kanan:
+with col_kanan:
     st.markdown("**Tampilan Rancangan Alat IoT:**")
     st.image("rancangan full IoT.png", use_column_width=True)
 
