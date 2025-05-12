@@ -199,7 +199,7 @@ with realtime:
 
 with col_kanan:
     st.markdown("**Tampilan Rancangan Alat IoT:**")
-    st.image("rancangan full IoT.png", width=450)
+    st.image("rancangan full IoT.png", width=450, height=340)
 
 
 
