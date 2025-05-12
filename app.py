@@ -339,15 +339,14 @@ if "text_input" not in st.session_state:
 if "text_result" not in st.session_state:
     st.session_state.text_result = None
 
-# Input teks tidak terstruktur
-input_text = st.text_area("Masukkan deskripsi lingkungan (contoh: 'cuaca panas dan tanah sangat kering')", 
+input_text = st.text_area("Masukkan deskripsi lingkungan (contoh: 'cuaca panas dan tanah sangat kering')",
                           value=st.session_state.text_input, height=120)
 
 btn_pred_text, btn_reset_text, _ = st.columns([1, 1, 8])
 with btn_pred_text:
     if st.button("🔍 Prediksi Teks"):
         try:
-            # Load semua model teks
+            # Load semua model teks (tanpa LightGBM)
             from sklearn.base import clone
             import joblib
             import numpy as np
@@ -355,7 +354,6 @@ with btn_pred_text:
             vectorizer = joblib.load("vectorizer.joblib")
             meta_model = joblib.load("meta_model_LR.joblib")
             base_models = {
-                'LightGBM': joblib.load("LightGBM_model.joblib"),
                 'C4.5': joblib.load("C4.5_model.joblib"),
                 'RF': joblib.load("RF_model.joblib"),
                 'HistGB': joblib.load("HistGB_model.joblib"),
