@@ -146,7 +146,7 @@ with realtime:
             "Value": [f"{last_row[col]:.1f}" for col in fitur]
         })
 
-        col_kiri, col_kanan = st.columns([1.2, 1.8])
+        col_kiri, col_tengah, col_kanan = st.columns([1.2, 1.2, 1.2])
         with col_kiri:
             st.markdown("**Data Sensor Realtime:**")
             sensor_html = "<table style='width: 100%; border-collapse: collapse;'>"
@@ -165,7 +165,7 @@ with realtime:
                 unsafe_allow_html=True
             )
 
-        with col_kanan:
+        with col_tengah:
             st.markdown("**Visualisasi Peta Lokasi Prediksi Kebakaran**")
             pekanbaru_coords = [-0.5071, 101.4478]
             color_map = {"Low": "blue", "Moderate": "green", "High": "orange", "Very High": "red"}
@@ -196,6 +196,12 @@ with realtime:
                           icon=folium.Icon(color=marker_color, icon="info-sign")).add_to(m)
 
             folium_static(m, width=450, height=340)
+
+    with col_kanan:
+    st.markdown("**Tampilan Rancangan Alat IoT:**")
+    st.image("rancangan full IoT.png", use_column_width=True)
+
+
 
 # === TABEL TINGKAT RISIKO ===
 st.markdown("<div class='section-title'>Tabel Tingkat Resiko dan Intensitas Kebakaran</div>", unsafe_allow_html=True)
