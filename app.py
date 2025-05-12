@@ -201,7 +201,7 @@ with col_kanan:
     st.markdown("**IoT Smart Fire Prediction:**")
     from PIL import Image
     image = Image.open("fireforest.png")
-    st.image(image.resize((200, 340)))
+    st.image(image.resize((430, 340)))
 
 
 
