@@ -199,7 +199,9 @@ with realtime:
 
 with col_kanan:
     st.markdown("**Tampilan Rancangan Alat IoT:**")
-    st.image("rancangan full IoT.png", width=450, height=340)
+    from PIL import Image
+    image = Image.open("rancangan full IoT.png")
+    st.image(image.resize((450, 340)))
 
 
 
