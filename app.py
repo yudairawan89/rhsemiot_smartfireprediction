@@ -331,6 +331,56 @@ if st.session_state.manual_result:
 
 
 
+# === PREDIKSI DENGAN TEKS TIDAK TERSTRUKTUR ===
+st.markdown("<div class='section-title'>Pengujian Menggunakan Data Teks</div>", unsafe_allow_html=True)
+
+if "text_input" not in st.session_state:
+    st.session_state.text_input = ""
+if "text_result" not in st.session_state:
+    st.session_state.text_result = None
+
+# Input teks tidak terstruktur
+input_text = st.text_area("Masukkan deskripsi lingkungan (contoh: 'cuaca panas dan tanah sangat kering')",
+                          value=st.session_state.text_input, height=120)
+
+btn_pred_text, btn_reset_text, _ = st.columns([1, 1, 8])
+with btn_pred_text:
+    if st.button("🔍 Prediksi Teks"):
+        try:
+            import joblib
+            import numpy as np
+
+            # Load vectorizer dan model stacking
+            vectorizer = joblib.load("tfidf_vectorizer.joblib")
+            stack_model = joblib.load("stacking_text_model.joblib")
+
+            # Transform TF-IDF dan konversi ke dense (karena HistGB & MLP butuh dense)
+            X_input_sparse = vectorizer.transform([input_text])
+            X_input_dense = X_input_sparse.toarray()
+
+            # Prediksi
+            pred_label = stack_model.predict(X_input_dense)[0]
+            st.session_state.text_result = convert_to_label(pred_label)
+            st.session_state.text_input = input_text
+
+        except Exception as e:
+            st.error(f"Gagal melakukan prediksi teks: {e}")
+
+with btn_reset_text:
+    if st.button("🧼 Reset Teks"):
+        st.session_state.text_input = ""
+        st.session_state.text_result = None
+        st.experimental_rerun()
+
+# Tampilkan hasil prediksi teks
+if st.session_state.text_result:
+    hasil = st.session_state.text_result
+    font, bg = risk_styles.get(hasil, ("black", "white"))
+    st.markdown(
+        f"<p style='color:{font}; background-color:{bg}; padding:10px; border-radius:5px;'>"
+        f"Hasil Prediksi Risiko Kebakaran dari Teks: <b>{hasil}</b></p>",
+        unsafe_allow_html=True
+    )
 
 
 
