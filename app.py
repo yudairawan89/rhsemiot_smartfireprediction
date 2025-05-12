@@ -330,15 +330,16 @@ if st.session_state.manual_result:
     )
 
 
-# === PENGUJIAN MENGGUNAKAN DATA TEKS ===
-st.markdown("<div class='section-title'>Pengujian Menggunakan Data Teks</div>", unsafe_allow_html=True)
+# === PENGUJIAN MENGGUNAKAN DATA TEKS TIDAK TERSTRUKTUR ===
+st.markdown("<div class='section-title'>Pengujian Menggunakan Data Teks Tidak Terstruktur</div>", unsafe_allow_html=True)
 
+# State untuk input & output
 if "text_input" not in st.session_state:
     st.session_state.text_input = ""
 if "text_result" not in st.session_state:
     st.session_state.text_result = None
 
-# Input teks tidak terstruktur
+# Input text dari user
 input_text = st.text_area("Masukkan deskripsi lingkungan (contoh: 'cuaca panas dan tanah sangat kering')", 
                           value=st.session_state.text_input, height=120)
 
@@ -346,21 +347,19 @@ btn_pred_text, btn_reset_text, _ = st.columns([1, 1, 8])
 with btn_pred_text:
     if st.button("🔍 Prediksi Teks"):
         try:
-            from sklearn.base import clone
             import joblib
-
+            # Load vectorizer dan model (pastikan file sudah benar dan hasil retraining)
             vectorizer = joblib.load("tfidf_vectorizer.joblib")
-            meta_model = joblib.load("stacking_text_model.joblib")
+            model_text = joblib.load("stacking_text_model.joblib")
 
-            # Transformasi teks
-            X_text = vectorizer.transform([input_text])
+            # Transformasi dan prediksi
+            X_trans = vectorizer.transform([input_text])
+            pred = model_text.predict(X_trans)[0]
+            label_text = convert_to_label(pred)
 
-            # Prediksi
-            pred_label = meta_model.predict(X_text)[0]
-            label_name = convert_to_label(pred_label)
-
+            # Simpan hasil ke session
             st.session_state.text_input = input_text
-            st.session_state.text_result = label_name
+            st.session_state.text_result = label_text
 
         except Exception as e:
             st.error(f"Terjadi kesalahan saat memuat model atau memproses input: {e}")
@@ -371,15 +370,16 @@ with btn_reset_text:
         st.session_state.text_result = None
         st.experimental_rerun()
 
-# Menampilkan hasil prediksi teks
+# Tampilkan hasil prediksi
 if st.session_state.text_result:
     hasil = st.session_state.text_result
     font, bg = risk_styles.get(hasil, ("black", "white"))
     st.markdown(
         f"<p style='color:{font}; background-color:{bg}; padding:10px; border-radius:5px;'>"
-        f"Prediksi Risiko Kebakaran dari Teks: <b>{hasil}</b></p>",
+        f"Hasil Prediksi dari Deskripsi Teks: <b>{hasil}</b></p>",
         unsafe_allow_html=True
     )
+
 
 
 
