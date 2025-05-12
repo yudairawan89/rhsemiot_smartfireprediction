@@ -201,7 +201,7 @@ with col_kanan:
     st.markdown("**Tampilan Rancangan Alat IoT:**")
     from PIL import Image
     image = Image.open("rancangan full IoT.png")
-    st.image(image.resize((450, 340)))
+    st.image(image.resize((200, 340)))
 
 
 
