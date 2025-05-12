@@ -10,6 +10,25 @@ import folium
 # === PAGE CONFIG ===
 st.set_page_config(page_title="Smart Fire Prediction RHSEM - IoT", layout="wide")
 
+
+# === LOAD MODEL DAN SCALER ===
+@st.cache_resource
+def load_model():
+    return joblib.load("RHSEM_IoT_Model.joblib")
+
+@st.cache_resource
+def load_scaler():
+    return joblib.load("scaler.joblib")
+
+model = load_model()
+scaler = load_scaler()
+
+# === LOAD DATA TANPA CACHE ===
+def load_data():
+    url = "https://docs.google.com/spreadsheets/d/1ZscUJ6SLPIF33t8ikVHUmR68b-y3Q9_r_p9d2rDRMCM/export?format=csv"
+    return pd.read_csv(url)
+
+
 # === AUTO REFRESH KHUSUS BAGIAN REALTIME ===
 realtime_refresh = st.container()
 with realtime_refresh:
@@ -156,22 +175,7 @@ risk_styles = {
     "Very High": ("white", "red")
 }
 
-# === LOAD MODEL DAN SCALER ===
-@st.cache_resource
-def load_model():
-    return joblib.load("RHSEM_IoT_Model.joblib")
 
-@st.cache_resource
-def load_scaler():
-    return joblib.load("scaler.joblib")
-
-model = load_model()
-scaler = load_scaler()
-
-# === LOAD DATA TANPA CACHE ===
-def load_data():
-    url = "https://docs.google.com/spreadsheets/d/1ZscUJ6SLPIF33t8ikVHUmR68b-y3Q9_r_p9d2rDRMCM/export?format=csv"
-    return pd.read_csv(url)
 
 st.cache_data.clear()
 df = load_data()
