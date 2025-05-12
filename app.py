@@ -331,7 +331,7 @@ if st.session_state.manual_result:
 
 
 # === PENGUJIAN MENGGUNAKAN DATA TEKS TIDAK TERSTRUKTUR ===
-st.markdown("<div class='section-title'>Pengujian Menggunakan Data Teks Tidak Terstruktur</div>", unsafe_allow_html=True)
+st.markdown("<div class='section-title'>Pengujian Menggunakan Data Teks</div>", unsafe_allow_html=True)
 
 # State untuk input & output
 if "text_input" not in st.session_state:
