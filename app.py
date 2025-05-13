@@ -168,7 +168,7 @@ with realtime:
         with col_tengah:
             st.markdown("**Visualisasi Peta Lokasi Prediksi Kebakaran**")
             pekanbaru_coords = [-0.5071, 101.4478]
-            color_map = {"Low": "blue", "Moderate": "green", "High": "orange", "Very High": "red"}
+            color_map = {"Low / Rendah": "blue", "Moderate / Sedang": "green", "High / Tinggi": "orange", "Very High / Sangat Tinggi": "red"}
             marker_color = color_map.get(risk_label, "gray")
 
             popup_text = folium.Popup(f"""
