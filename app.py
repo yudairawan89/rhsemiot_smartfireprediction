@@ -166,6 +166,7 @@ with realtime:
             )
 
         with col_tengah:
+            st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
             st.markdown("<h5 style='text-align: center;'>Visualisasi Peta Lokasi Prediksi Kebakaran</h5>", unsafe_allow_html=True)
             pekanbaru_coords = [-0.5071, 101.4478]
             color_map = {"Low / Rendah": "blue", "Moderate / Sedang": "green", "High / Tinggi": "orange", "Very High / Sangat Tinggi": "red"}
@@ -196,13 +197,15 @@ with realtime:
                           icon=folium.Icon(color=marker_color, icon="info-sign")).add_to(m)
 
             folium_static(m, width=450, height=340)
+            st.markdown("</div>", unsafe_allow_html=True)
 
 with col_kanan:
+    st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
     st.markdown("<h5 style='text-align: center;'>IoT Smart Fire Prediction</h5>", unsafe_allow_html=True)
     from PIL import Image
     image = Image.open("forestiot4.jpg")
     st.image(image.resize((430, 340)))
-
+    st.markdown("</div>", unsafe_allow_html=True)
 
 
 # === TABEL TINGKAT RISIKO ===
