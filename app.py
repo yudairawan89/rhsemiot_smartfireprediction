@@ -44,13 +44,13 @@ def convert_month_to_indonesian(month_name):
             'November': 'November', 'December': 'Desember'}.get(month_name, month_name)
 
 def convert_to_label(pred):
-    return {0: "Low", 1: "Moderate", 2: "High", 3: "Very High"}.get(pred, "Unknown")
+    return {0: "Low / Rendah", 1: "Moderate / Sedang", 2: "High / Tinggi", 3: "Very High / Sangat Tinggi"}.get(pred, "Unknown")
 
 risk_styles = {
-    "Low": ("white", "blue"),
-    "Moderate": ("white", "green"),
-    "High": ("black", "yellow"),
-    "Very High": ("white", "red")
+    "Low / Rendah": ("white", "blue"),
+    "Moderate / Sedang": ("white", "green"),
+    "High / Tinggi": ("black", "yellow"),
+    "Very High / Sangat Tinggi": ("white", "red")
 }
 
 # === LOAD MODEL DAN SCALER ===
