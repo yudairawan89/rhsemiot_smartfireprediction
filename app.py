@@ -200,7 +200,7 @@ with realtime:
 with col_kanan:
     st.markdown("**IoT Smart Fire Prediction:**")
     from PIL import Image
-    image = Image.open("forestiot2.jpg")
+    image = Image.open("forestiot3.jpg")
     st.image(image.resize((430, 340)))
 
 
