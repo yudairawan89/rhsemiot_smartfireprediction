@@ -302,8 +302,8 @@ btn_pred_text, btn_reset_text, _ = st.columns([1, 1, 8])
 with btn_pred_text:
     if st.button("🔍 Prediksi Teks"):
         try:
-            vectorizer = joblib.load("tfidf_vectorizer2.joblib")
-            model_text = joblib.load("stacking_text_model2.joblib")
+            vectorizer = joblib.load("tfidf_vectorizer.joblib")
+            model_text = joblib.load("stacking_text_model.joblib")
             X_trans = vectorizer.transform([input_text])
             pred = model_text.predict(X_trans)[0]
             label_text = convert_to_label(pred)
