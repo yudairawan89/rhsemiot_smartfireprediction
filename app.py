@@ -196,7 +196,7 @@ with realtime:
             folium.Marker(location=pekanbaru_coords, popup=popup_text,
                           icon=folium.Icon(color=marker_color, icon="info-sign")).add_to(m)
 
-            folium_static(m, width=500, height=350)
+            folium_static(m, width=480, height=350)
 
 
 with col_kanan:
@@ -204,7 +204,7 @@ with col_kanan:
     st.markdown("<h5 style='text-align: center;'>IoT Smart Fire Prediction</h5>", unsafe_allow_html=True)
     from PIL import Image
     image = Image.open("forestiot4.jpg")
-    st.image(image.resize((500, 360)))
+    st.image(image.resize((4800, 360)))
 
 
 
