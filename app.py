@@ -166,7 +166,7 @@ with realtime:
             )
 
         with col_tengah:
-           st.markdown("<h5 style='text-align: center;'>Visualisasi Peta Lokasi Prediksi Kebakaran</h5>", unsafe_allow_html=True)
+            st.markdown("<h5 style='text-align: center;'>Visualisasi Peta Lokasi Prediksi Kebakaran</h5>", unsafe_allow_html=True)
             pekanbaru_coords = [-0.5071, 101.4478]
             color_map = {"Low / Rendah": "blue", "Moderate / Sedang": "green", "High / Tinggi": "orange", "Very High / Sangat Tinggi": "red"}
             marker_color = color_map.get(risk_label, "gray")
