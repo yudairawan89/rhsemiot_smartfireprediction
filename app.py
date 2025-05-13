@@ -235,6 +235,39 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+
+
+# === TAMPILKAN DATA LENGKAP ===
+st.markdown("<div class='section-title'>Data Sensor Lengkap</div>", unsafe_allow_html=True)
+
+# Tampilkan seluruh data sensor + prediksi
+st.dataframe(df, use_container_width=True)
+
+# Tombol untuk download sebagai file Excel
+from io import BytesIO
+import base64
+
+def to_excel(df):
+    output = BytesIO()
+    writer = pd.ExcelWriter(output, engine='xlsxwriter')
+    df.to_excel(writer, index=False, sheet_name='Prediksi')
+    writer.close()
+    processed_data = output.getvalue()
+    return processed_data
+
+df_xlsx = to_excel(df)
+
+st.download_button(
+    label="📥 Download Hasil Prediksi Kebakaran sebagai XLSX",
+    data=df_xlsx,
+    file_name="hasil_prediksi_kebakaran.xlsx",
+    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+)
+
+
+
+
+
 # === PREDIKSI MANUAL ===
 st.markdown("<div class='section-title'>Pengujian Menggunakan Data Meteorologi Manual</div>", unsafe_allow_html=True)
 
