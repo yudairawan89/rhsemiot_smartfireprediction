@@ -148,7 +148,7 @@ with realtime:
 
         col_kiri, col_tengah, col_kanan = st.columns([1.2, 1.2, 1.2])
         with col_kiri:
-            st.markdown("**Data Sensor Realtime:**")
+            st.markdown("<h5 style='text-align: center;'>Data Sensor Realtime</h5>", unsafe_allow_html=True)
             sensor_html = "<table style='width: 100%; border-collapse: collapse;'>"
             sensor_html += "<thead><tr><th>Variabel</th><th>Value</th></tr></thead><tbody>"
             for i in range(len(sensor_df)):
@@ -166,7 +166,7 @@ with realtime:
             )
 
         with col_tengah:
-            st.markdown("**Visualisasi Peta Lokasi Prediksi Kebakaran**")
+           st.markdown("<h5 style='text-align: center;'>Visualisasi Peta Lokasi Prediksi Kebakaran</h5>", unsafe_allow_html=True)
             pekanbaru_coords = [-0.5071, 101.4478]
             color_map = {"Low / Rendah": "blue", "Moderate / Sedang": "green", "High / Tinggi": "orange", "Very High / Sangat Tinggi": "red"}
             marker_color = color_map.get(risk_label, "gray")
@@ -198,7 +198,7 @@ with realtime:
             folium_static(m, width=450, height=340)
 
 with col_kanan:
-    st.markdown("**IoT Smart Fire Prediction:**")
+    st.markdown("<h5 style='text-align: center;'>IoT Smart Fire Prediction</h5>", unsafe_allow_html=True)
     from PIL import Image
     image = Image.open("forestiot4.jpg")
     st.image(image.resize((430, 340)))
