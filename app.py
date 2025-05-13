@@ -204,7 +204,7 @@ with col_kanan:
     st.markdown("<h5 style='text-align: center;'>IoT Smart Fire Prediction</h5>", unsafe_allow_html=True)
     from PIL import Image
     image = Image.open("forestiot4.jpg")
-    st.image(image.resize((500, 340)))
+    st.image(image.resize((520, 360)))
 
 
 
