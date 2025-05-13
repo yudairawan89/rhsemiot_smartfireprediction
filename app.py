@@ -196,7 +196,7 @@ with realtime:
             folium.Marker(location=pekanbaru_coords, popup=popup_text,
                           icon=folium.Icon(color=marker_color, icon="info-sign")).add_to(m)
 
-            folium_static(m, width=500, height=340)
+            folium_static(m, width=520, height=340)
             st.markdown("</div>", unsafe_allow_html=True)
 
 with col_kanan:
